@@ -1,0 +1,9 @@
+rootProject.name = "edc_connector"
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
+}
+
+include(":connector")

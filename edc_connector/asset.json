@@ -1,0 +1,12 @@
+﻿{
+  "@context": { "@vocab": "https://w3id.org/edc/v0.0.1/ns/" },
+  "@id": "poids-usine1-round1",
+  "properties": {
+    "name": "poids-usine1-round1",
+    "contenttype": "text/plain"
+  },
+  "dataAddress": {
+    "type": "File",
+    "path": "C:\\Users\\bougu\\Industrial_Data_Space_for_Predictive_Maintenance-\\edc_connector\\provider\\sample-weights.txt"
+  }
+}
