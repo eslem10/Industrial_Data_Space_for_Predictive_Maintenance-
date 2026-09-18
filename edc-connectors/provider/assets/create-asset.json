@@ -1,0 +1,16 @@
+{
+  "@context": {
+    "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
+  },
+  "@id": "weights-factory-1-round-1",
+  "properties": {
+    "name": "Factory 1 model weights - round 1",
+    "contenttype": "application/json"
+  },
+  "dataAddress": {
+    "type": "HttpData",
+    "name": "Factory 1 round 1 weights",
+    "baseUrl": "http://localhost:8000/round_001.json",
+    "proxyPath": "true"
+  }
+}

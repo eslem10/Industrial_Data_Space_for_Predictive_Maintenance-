@@ -1,0 +1,16 @@
+{
+  "@context": {
+    "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
+  },
+  "@type": "ContractRequest",
+  "counterPartyId": "factory-1",
+  "counterPartyAddress": "http://localhost:19194/protocol/2025-1",
+  "protocol": "dataspace-protocol-http:2025-1",
+  "policy": {
+    "@context": "http://www.w3.org/ns/odrl.jsonld",
+    "@id": "Y29udHJhY3QtZmFjdG9yeS0xLXJvdW5kLTE=:d2VpZ2h0cy1mYWN0b3J5LTEtcm91bmQtMQ==:MmUyZDBkYTMtMzFiZi00YmNlLTk0YTctODhjNDNkMTQxNzE0",
+    "@type": "Offer",
+    "assigner": "factory-1",
+    "target": "weights-factory-1-round-1"
+  }
+}
