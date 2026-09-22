@@ -10,7 +10,7 @@
   "dataAddress": {
     "type": "HttpData",
     "name": "Factory 1 round 1 weights",
-    "baseUrl": "http://localhost:8000/round_001.json",
-    "proxyPath": "true"
+    "baseUrl": "http://localhost:8000",
+    "proxyPath": true
   }
 }
