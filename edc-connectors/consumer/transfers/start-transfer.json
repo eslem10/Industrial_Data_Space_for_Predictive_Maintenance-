@@ -1,0 +1,11 @@
+{
+  "@context": {
+    "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
+  },
+  "@type": "TransferRequestDto",
+  "connectorId": "factory-1",
+  "counterPartyAddress": "http://localhost:19194/protocol/2025-1",
+  "contractId": "11b92afd-c0ef-4efb-80cc-8272a36dbcf5",
+  "protocol": "dataspace-protocol-http:2025-1",
+  "transferType": "HttpData-PULL"
+} 
