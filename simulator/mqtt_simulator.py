@@ -1,92 +1,68 @@
 import json
 import time
-import random
 import paho.mqtt.client as mqtt
 
-# ==========================================
-# MQTT CONFIGURATION
-# ==========================================
+from data_generator import generate_sensor_data
+
 BROKER = "broker.emqx.io"
 PORT = 1883
+
 FACTORIES = ["F1", "F2", "F3"]
 
-
-def generate_sensor_data(factory_id):
-
-    failure = random.random() < 0.05
-
-    if failure:
-        temperature = random.gauss(90, 7)
-        vibration = random.gauss(1.5, 0.3)
-        pressure = random.gauss(6, 0.8)
-        humidity = random.gauss(50, 6)
-        energy = random.gauss(11, 1.5)
-        state = "failure"
-
-    else:
-        temperature = random.gauss(65, 5)
-        vibration = random.gauss(0.4, 0.12)
-        pressure = random.gauss(3.5, 0.4)
-        humidity = random.gauss(45, 5)
-        energy = random.gauss(7, 1)
-        state = "normal"
-
-    return {
-        "factory_id": factory_id,
-        "temperature": round(max(0, temperature), 2),
-        "vibration": round(max(0, vibration), 3),
-        "pressure": round(max(0, pressure), 2),
-        "humidity": round(max(0, humidity), 2),
-        "energy_consumption": round(max(0, energy), 2),
-        "state": state
-    }
+INTERVAL = 30
 
 
-# ==========================================
-# MQTT CLIENT
-# ==========================================
 client = mqtt.Client(
     mqtt.CallbackAPIVersion.VERSION2,
     client_id="industrial-iot-simulator"
 )
 
 print("Connecting to MQTT broker...")
-
 client.connect(BROKER, PORT, 60)
-
-# Important pour que MQTT fonctionne correctement
 client.loop_start()
 
 print("Connected!")
-print("Starting IoT simulation...")
+print("Starting Industrial IoT simulation...")
 print("------------------------------------------")
 
 
-try:
+timestamp_index = 0
 
+
+try:
     while True:
 
         print("Sending data from all factories...")
 
-        # Envoyer F1, F2 et F3
         for factory in FACTORIES:
 
-            data = generate_sensor_data(factory)
+            # Generate sensor measurements
+            data = generate_sensor_data(
+                factory,
+                timestamp_index
+            )
+
+            # Remove the true state.
+            # The ML model must predict it later.
+            data.pop("state", None)
 
             topic = f"industrial/factory/{factory}/sensors"
 
-            message = json.dumps(data)
+            client.publish(
+                topic,
+                json.dumps(data)
+            )
 
-            client.publish(topic, message)
+            print(f"✓ {factory} → {data}")
 
-            print(f"✓ {factory} sent")
+        # Next cycle
+        timestamp_index += 1
 
         print("------------------------------------------")
-        print("Waiting 30 seconds...")
+        print(f"Waiting {INTERVAL} seconds...")
         print()
 
-        # ATTENDRE 30 SECONDES AVANT LE PROCHAIN CYCLE
-        time.sleep(30)
+        time.sleep(INTERVAL)
 
 
 except KeyboardInterrupt:
@@ -95,3 +71,4 @@ except KeyboardInterrupt:
 
     client.loop_stop()
     client.disconnect()
+
