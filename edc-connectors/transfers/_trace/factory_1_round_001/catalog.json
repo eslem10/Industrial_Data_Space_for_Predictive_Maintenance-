@@ -1,0 +1,57 @@
+{
+  "@id": "08cde22c-1dcb-4fe3-9cae-195d77cca6ba",
+  "@type": "Catalog",
+  "dataset": [
+    {
+      "@id": "weights-factory-1-round-1",
+      "@type": "Dataset",
+      "hasPolicy": [
+        {
+          "@id": "Y29udHJhY3QtZmFjdG9yeS0xLXJvdW5kLTE=:d2VpZ2h0cy1mYWN0b3J5LTEtcm91bmQtMQ==:YWM5NjFmZWEtY2Q5NC00ZjdkLWJmMTAtNDY3Y2RjYWM1NDA0",
+          "@type": "Offer"
+        }
+      ],
+      "distribution": [
+        {
+          "@type": "Distribution",
+          "format": "HttpData-PULL",
+          "accessService": {
+            "@id": "cb1717fe-2866-4491-97b3-a02f69fa502a",
+            "@type": "DataService",
+            "endpointDescription": "dspace:connector",
+            "endpointURL": "http://localhost:19194/protocol/2025-1"
+          }
+        },
+        {
+          "@type": "Distribution",
+          "format": "HttpData-PUSH",
+          "accessService": {
+            "@id": "4322d84d-c930-4029-a50c-7973eda4c55a",
+            "@type": "DataService",
+            "endpointDescription": "dspace:connector",
+            "endpointURL": "http://localhost:19194/protocol/2025-1"
+          }
+        }
+      ],
+      "edc:round": 1.0,
+      "edc:factory": "factory_1",
+      "edc:sourcePath": "factory_1/round_001.json",
+      "edc:name": "Factory 1 model weights - round 1",
+      "id": "weights-factory-1-round-1",
+      "edc:contenttype": "application/json"
+    }
+  ],
+  "service": [
+    {
+      "@id": "045fddb5-5b2a-4887-bee9-1cf1cf7e1c0d",
+      "@type": "DataService",
+      "endpointDescription": "dspace:connector",
+      "endpointURL": "http://localhost:19194/protocol/2025-1"
+    }
+  ],
+  "participantId": "factory-1",
+  "@context": [
+    "https://w3id.org/dspace/2025/1/context.jsonld",
+    "https://w3id.org/edc/dspace/v0.0.1"
+  ]
+}
