@@ -1,0 +1,12 @@
+{
+  "factory_id": "factory-1",
+  "round": 1,
+  "asset_id": "weights-factory-1-round-1",
+  "offer_id": "Y29udHJhY3QtZmFjdG9yeS0xLXJvdW5kLTE=:d2VpZ2h0cy1mYWN0b3J5LTEtcm91bmQtMQ==:MjZkMjFiZWUtZDZiNC00MDFlLWJlYmMtOTZjYWY5OTkzMTc0",
+  "contract_negotiation_id": "976b5442-f57e-4b11-af1a-5c4e18833250",
+  "contract_agreement_id": "a149d4c5-cd9d-4623-bc61-670b6f095e58",
+  "transfer_process_id": "896294bf-e514-4210-9b5f-b5c400ceff9f",
+  "source": "edc-connectors\\weights\\factory_1\\round_001.json",
+  "destination": "C:\\Users\\hanin\\Industrial_Data_Space_for_Predictive_Maintenance-\\edc-connectors\\transfers\\factory-1\\round_001.json",
+  "status": "TRANSFERRED"
+}
