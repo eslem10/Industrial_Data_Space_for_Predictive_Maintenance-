@@ -1,0 +1,6 @@
+**/build/
+**/.gradle/
+.venv/
+.venv*/
+__pycache__/
+federated/global_model.keras
