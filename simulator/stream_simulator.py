@@ -1,4 +1,4 @@
-"""Simulate and store one sensor stream for one factory."""
+"""Simule et stocke le flux de capteurs d'une usine."""
 
 import argparse
 import csv
@@ -205,7 +205,6 @@ def run_backfill(factory_name, count, step_seconds=60, reset=False):
 
     csv_path, latest_path = factory_paths(factory_name)
     rng = np.random.default_rng(SEED_BASE + factory_number(factory_name))
-    publisher = create_mqtt_publisher(factory_name)
     csv_file, writer = open_csv(csv_path, reset=reset)
     last_measurement = None
     try:
@@ -219,16 +218,12 @@ def run_backfill(factory_name, count, step_seconds=60, reset=False):
                 writer,
                 csv_file,
                 latest_path,
-                publisher,
                 update_latest=False,
             )
     finally:
         csv_file.close()
         if last_measurement is not None:
             write_latest(latest_path, last_measurement)
-        if publisher is not None:
-            publisher.loop_stop()
-            publisher.disconnect()
     print(f"{factory_name}: {count} mesures ajoutees dans {csv_path}; derniere mesure : {latest_path}")
 
 
@@ -238,10 +233,11 @@ def run_realtime(factory_name, reset=False):
 
     csv_path, latest_path = factory_paths(factory_name)
     rng = np.random.default_rng(SEED_BASE + factory_number(factory_name))
-    publisher = create_mqtt_publisher(factory_name)
     csv_file, writer = open_csv(csv_path, reset=reset)
+    publisher = None
     index = 0
     try:
+        publisher = create_mqtt_publisher(factory_name)
         while True:
             measurement = generate_measurement(
                 factory_name,
