@@ -83,8 +83,8 @@ class SaveModelStrategy(fl.server.strategy.FedAvg):
 
 
 def main():
-    if NUM_ROUNDS < 1 or NUM_CLIENTS < 1:
-        raise ValueError("NUM_ROUNDS et NUM_CLIENTS doivent etre positifs")
+    if NUM_ROUNDS < 1 or NUM_CLIENTS < 3:
+        raise ValueError("NUM_ROUNDS doit etre positif et NUM_CLIENTS doit valoir au moins 3")
     model = create_model()
     strategy = SaveModelStrategy(
         model,
