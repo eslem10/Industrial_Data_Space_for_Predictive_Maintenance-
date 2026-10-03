@@ -40,7 +40,7 @@ def generate_factory_data(factory_id, num_samples, rng, start_time):
     values = {}
     standardized = []
     for feature, (mean, std) in profile.items():
-        # A mild drift and correlated sensor variation add realism.
+        # Derive legere et variation partagee des capteurs.
         drift = 1.2 * np.sin(np.arange(num_samples) / 900 + int(factory_id[-1]))
         common_variation = rng.normal(0, 0.18, num_samples)
         measurements = rng.normal(mean + drift, std, num_samples)
