@@ -7,7 +7,10 @@ from pathlib import Path
 import flwr as fl
 import tensorflow as tf
 
-from preprocessing import FEATURES
+if __package__:
+    from .preprocessing import FEATURES
+else:
+    from preprocessing import FEATURES
 
 
 SERVER_ADDRESS = os.environ.get("SERVER_ADDRESS", "0.0.0.0:8080")

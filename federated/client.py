@@ -9,7 +9,10 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 
-from preprocessing import FEATURES, LABEL, scale_features
+if __package__:
+    from .preprocessing import FEATURES, LABEL, scale_features
+else:
+    from preprocessing import FEATURES, LABEL, scale_features
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
