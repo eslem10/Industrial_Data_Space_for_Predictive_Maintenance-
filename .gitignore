@@ -4,3 +4,4 @@
 .venv*/
 __pycache__/
 federated/global_model.keras
+data_backup/
