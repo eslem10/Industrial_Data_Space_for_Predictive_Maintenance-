@@ -5,3 +5,5 @@
 __pycache__/
 federated/global_model.keras
 data_backup/
+data/**/latest.json.*.tmp
+.stream_smoke/
