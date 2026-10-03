@@ -40,11 +40,11 @@ def generate_factory_data(factory_id, num_samples, rng, start_time):
     values = {}
     standardized = []
     for feature, (mean, std) in profile.items():
-        # Mild drift and correlated sensor noise make the series less artificial.
+        # A mild drift and correlated sensor variation add realism.
         drift = 1.2 * np.sin(np.arange(num_samples) / 900 + int(factory_id[-1]))
-        common_noise = rng.normal(0, 0.18, num_samples)
+        common_variation = rng.normal(0, 0.18, num_samples)
         measurements = rng.normal(mean + drift, std, num_samples)
-        measurements += common_noise * std
+        measurements += common_variation * std
         values[feature] = measurements
         if feature != "humidity":
             standardized.append((measurements - mean) / std)
