@@ -174,10 +174,11 @@ def create_mqtt_publisher(factory_name):
     return publisher
 
 
-def store_measurement(factory_name, measurement, csv_writer, csv_file, latest_path, publisher=None):
+def store_measurement(factory_name, measurement, csv_writer, csv_file, latest_path, publisher=None, update_latest=True):
     csv_writer.writerow(measurement)
     csv_file.flush()
-    write_latest(latest_path, measurement)
+    if update_latest:
+        write_latest(latest_path, measurement)
     if publisher is not None:
         topic = f"industrial/{factory_name}/sensors"
         publisher.publish(topic, json.dumps(measurement, ensure_ascii=False))
@@ -206,13 +207,25 @@ def run_backfill(factory_name, count, step_seconds=60, reset=False):
     rng = np.random.default_rng(SEED_BASE + factory_number(factory_name))
     publisher = create_mqtt_publisher(factory_name)
     csv_file, writer = open_csv(csv_path, reset=reset)
+    last_measurement = None
     try:
         for index in range(count):
             timestamp = BACKFILL_START + timedelta(seconds=index * step_seconds)
             measurement = generate_measurement(factory_name, timestamp, rng, index)
-            store_measurement(factory_name, measurement, writer, csv_file, latest_path, publisher)
+            last_measurement = measurement
+            store_measurement(
+                factory_name,
+                measurement,
+                writer,
+                csv_file,
+                latest_path,
+                publisher,
+                update_latest=False,
+            )
     finally:
         csv_file.close()
+        if last_measurement is not None:
+            write_latest(latest_path, last_measurement)
         if publisher is not None:
             publisher.loop_stop()
             publisher.disconnect()
