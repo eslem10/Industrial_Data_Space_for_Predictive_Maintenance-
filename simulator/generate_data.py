@@ -1,103 +1,89 @@
-import os
-import random
+"""Generate reproducible synthetic predictive-maintenance data."""
+
+from datetime import datetime, timedelta
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
 
 
-NUM_FACTORIES = 3
-SAMPLES_PER_FACTORY = 10000
+ROOT = Path(__file__).resolve().parent.parent
+OUTPUT_DIR = ROOT / "data"
+SAMPLES_PER_FACTORY = 12_000
+FAILURE_RATE = 0.06
+SEED = 20260929
 
-# data folder is one level above simulator
-OUTPUT_DIR = "../data"
+PROFILES = {
+    "F1": {"temperature": (55, 7), "vibration": (0.35, 0.13), "pressure": (3.4, 0.55), "humidity": (55, 8), "energy_consumption": (6.5, 1.2)},
+    "F2": {"temperature": (75, 8), "vibration": (0.45, 0.16), "pressure": (3.7, 0.65), "humidity": (65, 9), "energy_consumption": (7.5, 1.4)},
+    "F3": {"temperature": (68, 8), "vibration": (0.70, 0.20), "pressure": (3.8, 0.70), "humidity": (48, 7), "energy_consumption": (8.5, 1.6)},
+}
+FEATURES = list(next(iter(PROFILES.values())))
+RISK_WEIGHTS = np.array([0.30, 0.30, 0.20, 0.20])
 
 
-def generate_factory_data(factory_id, num_samples):
-
-    data = []
-
-    start_time = datetime.now()
-
-    for i in range(num_samples):
-
-        timestamp = start_time + timedelta(seconds=i)
-
-        # 5% failure cases
-        failure = random.random() < 0.05
-
-        if failure:
-            temperature = np.random.normal(90, 7)
-            vibration = np.random.normal(1.5, 0.3)
-            pressure = np.random.normal(6, 0.8)
-            humidity = np.random.normal(50, 6)
-            energy = np.random.normal(11, 1.5)
-            state = "failure"
-
+def calibrated_intercept(risk: np.ndarray, target_rate: float) -> float:
+    low, high = -20.0, 5.0
+    for _ in range(80):
+        middle = (low + high) / 2
+        mean_probability = np.mean(1 / (1 + np.exp(-(middle + risk))))
+        if mean_probability < target_rate:
+            low = middle
         else:
-            temperature = np.random.normal(65, 5)
-            vibration = np.random.normal(0.4, 0.12)
-            pressure = np.random.normal(3.5, 0.4)
-            humidity = np.random.normal(45, 5)
-            energy = np.random.normal(7, 1)
-            state = "normal"
-
-        data.append({
-            "timestamp": timestamp,
-            "factory_id": factory_id,
-            "temperature": round(max(0, temperature), 2),
-            "vibration": round(max(0, vibration), 3),
-            "pressure": round(max(0, pressure), 2),
-            "humidity": round(max(0, humidity), 2),
-            "energy_consumption": round(max(0, energy), 2),
-            "state": state
-        })
-
-    return pd.DataFrame(data)
+            high = middle
+    return (low + high) / 2
 
 
-def main():
+def generate_factory_data(
+    factory_id: str,
+    num_samples: int,
+    rng: np.random.Generator,
+    start_time: datetime,
+) -> pd.DataFrame:
+    profile = PROFILES[factory_id]
+    values = {}
+    standardized = []
+    for feature, (mean, std) in profile.items():
+        drift = 1.2 * np.sin(np.arange(num_samples) / 900 + int(factory_id[-1]))
+        common_noise = rng.normal(0, 0.18, num_samples)
+        measurements = rng.normal(mean + drift, std, num_samples)
+        measurements += common_noise * std
+        values[feature] = measurements
+        if feature != "humidity":
+            standardized.append((measurements - mean) / std)
 
-    print("==========================================")
-    print(" Industrial IoT Data Simulator")
-    print("==========================================")
+    risk = 3.0 * np.sum(np.vstack(standardized).T * RISK_WEIGHTS, axis=1)
+    risk += rng.normal(0, 0.75, num_samples)
+    intercept = calibrated_intercept(risk, FAILURE_RATE)
+    probability = 1 / (1 + np.exp(-(intercept + risk)))
+    is_failure = rng.random(num_samples) < probability
 
-    for factory in range(1, NUM_FACTORIES + 1):
+    for feature, (_, std) in profile.items():
+        faulty = rng.random(num_samples) < 0.01
+        values[feature][faulty] += rng.normal(0, 2.5 * std, faulty.sum())
 
-        factory_id = f"F{factory}"
+    return pd.DataFrame({
+        "timestamp": [start_time + timedelta(minutes=i) for i in range(num_samples)],
+        "factory_id": factory_id,
+        **{feature: np.round(np.maximum(values[feature], 0), 3) for feature in FEATURES},
+        "state": np.where(is_failure, "failure", "normal"),
+    })
 
-        factory_dir = os.path.join(
-            OUTPUT_DIR,
-            f"factory_{factory}"
-        )
 
-        os.makedirs(factory_dir, exist_ok=True)
-
-        print(f"\nGenerating data for {factory_id}...")
-
-        df = generate_factory_data(
-            factory_id,
-            SAMPLES_PER_FACTORY
-        )
-
-        output_file = os.path.join(
-            factory_dir,
-            "sensor_data.csv"
-        )
-
-        df.to_csv(
-            output_file,
-            index=False
-        )
-
-        print(f"OK: {len(df)} samples generated")
-        print(f"Saved to: {output_file}")
-
-        print("\nState distribution:")
-        print(df["state"].value_counts())
-
-    print("\n==========================================")
-    print(" Data generation completed successfully!")
-    print("==========================================")
+def main() -> None:
+    rng = np.random.default_rng(SEED)
+    start_time = datetime.now().replace(microsecond=0)
+    print("Generating reproducible synthetic sensor data...")
+    for number in range(1, 4):
+        factory_id = f"F{number}"
+        factory_dir = OUTPUT_DIR / f"factory_{number}"
+        factory_dir.mkdir(parents=True, exist_ok=True)
+        frame = generate_factory_data(factory_id, SAMPLES_PER_FACTORY, rng, start_time)
+        csv_path = factory_dir / "sensor_data.csv"
+        frame.to_csv(csv_path, index=False)
+        failures = int((frame["state"] == "failure").sum())
+        print(f"{csv_path}: {len(frame)} rows, {failures} failures ({failures / len(frame):.2%})")
+    print("Done. Existing factory CSV files have been replaced.")
 
 
 if __name__ == "__main__":
