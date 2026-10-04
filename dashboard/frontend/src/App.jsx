@@ -16,6 +16,7 @@ function App() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState(new Date().toLocaleTimeString());
   const [simulatedAnomaly, setSimulatedAnomaly] = useState(false);
+  const [mqttStatus, setMqttStatus] = useState({ connected: false, lastMessageAt: null });
 
   // Fetch factories
   const fetchFactories = async () => {
@@ -164,7 +165,7 @@ function App() {
           <div className="sync-status-pill">
             <span className="pulse-beacon"></span>
             <div className="sync-meta">
-              <span className="sync-state">REALTIME STREAM</span>
+              <span className="sync-state">{mqttStatus.connected ? "MQTT LIVE STREAM" : "CSV FALLBACK STREAM"}</span>
               <small className="sync-time">Synced {lastSyncTime}</small>
             </div>
           </div>

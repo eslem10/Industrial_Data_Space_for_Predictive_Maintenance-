@@ -9,7 +9,8 @@
 ## Phase 0 — Consolider l'acquis (à faire en premier)
 
 - [ ] Documenter la config finale qui fonctionne dans un README de `edc_connector/` : `build.gradle.kts` final, les deux `config.properties`, les deux fichiers d'extension Java, et la séquence curl complète.
-- [ ] Automatiser la séquence manuelle (policy → asset → contractdef → catalogue → négociation → transfert) dans un script PowerShell ou Python, puisque les stores en mémoire s'effacent à chaque redémarrage.
+- [x] Automatiser la séquence manuelle (policy → asset → contractdef → catalogue → négociation → transfert) dans un script Python, puisque les stores en mémoire s'effacent à chaque redémarrage.
+- [x] Ajouter un lanceur de round multi-usines qui réutilise la séquence EDC et produit un résumé JSON.
 
 ### Configuration finale qui fonctionne
 
@@ -90,6 +91,8 @@ edc.transfer.proxy.token.verifier.publickey.alias=public-key
 
 1. **Renommage aligné sur le dashboard** : `EDC-F1-PROD`, `EDC-F2-PROD`, `EDC-F3-PROD` (usines), nom à définir pour le connecteur central (ex. `EDC-FEDERATION-SERVER`)
 2. **Dupliquer la config en 4 dossiers** : `usine1/`, `usine2/`, `usine3/`, `federation-server/` — même jar, plages de ports différentes (19xxx/39xxx/49xxx/59xxx), chacun avec son propre `edc.dataplane.proxy.public.endpoint`
+   - [x] Préparer les configurations locales des usines 2 et 3 dans `provider/config/factory-2.properties` et `provider/config/factory-3.properties`
+   - [x] Ajouter `scripts/start_connectors.ps1` pour démarrer les trois providers avec le JAR data-plane PULL et le consumer
 3. **Format réel des poids** avec la Personne 2 — remplacer `sample-weights.txt` par le vrai fichier produit par son script (`.h5`/`.npz`/`.keras`)
 4. **Un asset par usine par round**, convention `poids-usine{N}-round{K}`
 5. **Script Python d'automatisation** : après chaque round local, le script de la Personne 2 appelle `requests.post()` pour créer/mettre à jour l'asset du round
@@ -120,4 +123,8 @@ edc.transfer.proxy.token.verifier.publickey.alias=public-key
 
 ## Prochaine action immédiate
 
-Écrire le script d'automatisation de la Phase 0 avant d'attaquer la Phase 1 — il fera gagner énormément de temps dès la Phase 2, quand la séquence devra tourner sur 4 connecteurs au lieu de 2.
+Renseigner les chemins des vrais fichiers de poids pour les usines 2 et 3,
+puis démarrer les trois connecteurs providers avec
+`scripts/start_connectors.ps1`. Le lanceur `run_federated_round.py` pourra
+alors exécuter un round complet et conserver un résumé des transferts réussis
+ou échoués.

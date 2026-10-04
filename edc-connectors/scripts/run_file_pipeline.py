@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import functools
 import json
+import mimetypes
 import sys
 import threading
 import time
@@ -135,7 +136,7 @@ def build_asset_payload(args: argparse.Namespace, source_path: str) -> dict[str,
         "@id": args.asset_id,
         "properties": {
             "name": f"Factory {args.factory} model weights - round {args.round}",
-            "contenttype": "application/json",
+            "contenttype": args.content_type,
             "factory": factory_slug(args.factory),
             "round": args.round,
             "sourcePath": source_path,
@@ -344,6 +345,16 @@ def configure_args() -> argparse.Namespace:
     parser.add_argument("--counter-party-address", default="http://localhost:19194/protocol/2025-1")
     parser.add_argument("--protocol", default=DEFAULT_PROTOCOL)
     parser.add_argument("--source-base-url", default="http://localhost:8000")
+    parser.add_argument(
+        "--source-file-name",
+        default=None,
+        help="Filename inside the factory directory. Defaults to round_NNN.json.",
+    )
+    parser.add_argument(
+        "--content-type",
+        default=None,
+        help="MIME type advertised for the source file. Defaults to a filename guess.",
+    )
     parser.add_argument("--source-dir", type=Path, default=EDC_ROOT / "weights")
     parser.add_argument("--source-server-port", type=int, default=8000)
     parser.add_argument("--no-source-server", action="store_true", help="Do not start a local HTTP file server.")
@@ -359,13 +370,15 @@ def configure_args() -> argparse.Namespace:
     args.counter_party_id = args.counter_party_id or f"factory-{args.factory}"
     args.asset_id = args.asset_id or f"weights-factory-{args.factory}-round-{args.round}"
     args.contract_definition_id = args.contract_definition_id or f"contract-factory-{args.factory}-round-{args.round}"
+    args.source_file_name = args.source_file_name or round_file_name(args.round)
+    args.content_type = args.content_type or mimetypes.guess_type(args.source_file_name)[0] or "application/octet-stream"
     args.provider_management = args.provider_management.rstrip("/")
     args.consumer_management = args.consumer_management.rstrip("/")
     return args
 
 
 def run_pipeline(args: argparse.Namespace) -> None:
-    source_path = f"{factory_slug(args.factory)}/{round_file_name(args.round)}"
+    source_path = f"{factory_slug(args.factory)}/{args.source_file_name}"
     source_file = args.source_dir / source_path
     output_path = args.output_dir / source_path
 

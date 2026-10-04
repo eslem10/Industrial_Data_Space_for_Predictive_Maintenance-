@@ -27,6 +27,7 @@ dependencies {
     implementation(libs.edc.iam.mock)
     implementation(libs.edc.transfer.data.plane.signaling)
     implementation(libs.edc.validator.data.address.http.data)
+    implementation(libs.edc.configuration.filesystem)
 
     implementation(libs.edc.edr.cache.api)
     implementation(libs.edc.edr.store.core)
@@ -38,6 +39,8 @@ dependencies {
     implementation(libs.edc.data.plane.core)
     implementation(libs.edc.data.plane.http)
     implementation(libs.edc.data.plane.iam)
+    implementation(libs.edc.data.plane.spi)
+    implementation(libs.edc.web.spi)
 }
 
 application {
@@ -53,3 +56,4 @@ tasks.shadowJar {
     dependsOn(distTar, distZip)
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
+
