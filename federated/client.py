@@ -1,3 +1,4 @@
+import json
 import sys
 from pathlib import Path
 
@@ -9,6 +10,9 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 from sklearn.model_selection import train_test_split
 
 from preprocessing import FEATURES, LABEL, scale_features
+
+
+EDC_WEIGHTS_DIR = Path(__file__).resolve().parent.parent / "edc-connectors" / "weights"
 
 
 def create_model() -> tf.keras.Model:
@@ -55,9 +59,23 @@ def load_factory_data(factory_name: str):
     return scale_features(X_train), scale_features(X_test), y_train, y_test
 
 
+def export_round_weights(factory_name: str, round_number: int, weights) -> None:
+    output_dir = EDC_WEIGHTS_DIR / factory_name
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / f"round_{round_number:03d}.json"
+    payload = {
+        "factory_id": factory_name,
+        "round": round_number,
+        "weights": [layer.tolist() for layer in weights],
+    }
+    output_path.write_text(json.dumps(payload), encoding="utf-8")
+    print(f"[{factory_name}] exported round {round_number} weights to {output_path}")
+
+
 class FactoryClient(fl.client.NumPyClient):
     def __init__(self, factory_name: str):
         self.factory_name = factory_name
+        self.round = 0
         self.model = create_model()
         self.X_train, self.X_test, self.y_train, self.y_test = load_factory_data(factory_name)
 
@@ -67,7 +85,12 @@ class FactoryClient(fl.client.NumPyClient):
     def fit(self, parameters, config):
         self.model.set_weights(parameters)
         self.model.fit(self.X_train, self.y_train, epochs=5, batch_size=32, verbose=0)
-        return self.model.get_weights(), len(self.X_train), {}
+        updated_weights = self.model.get_weights()
+
+        self.round += 1
+        export_round_weights(self.factory_name, self.round, updated_weights)
+
+        return updated_weights, len(self.X_train), {}
 
     def evaluate(self, parameters, config):
         self.model.set_weights(parameters)
