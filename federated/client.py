@@ -1,18 +1,28 @@
 import json
-import sys
+import os
 from pathlib import Path
+import sys
 
 import flwr as fl
 import numpy as np
 import pandas as pd
 import tensorflow as tf
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
-from sklearn.model_selection import train_test_split
 
-from preprocessing import FEATURES, LABEL, scale_features
+try:
+    from .preprocessing import FEATURES, LABEL, scale_features
+except ImportError:
+    from preprocessing import FEATURES, LABEL, scale_features
 
 
 EDC_WEIGHTS_DIR = Path(__file__).resolve().parent.parent / "edc-connectors" / "weights"
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+DATA_DIR = Path(os.environ.get("DATA_DIR", PROJECT_ROOT / "data")).expanduser()
+if not DATA_DIR.is_absolute():
+    DATA_DIR = PROJECT_ROOT / DATA_DIR
+SERVER_ADDRESS = os.environ.get("SERVER_ADDRESS", "127.0.0.1:8080")
+SEED = 42
+
 
 
 def create_model() -> tf.keras.Model:
@@ -26,11 +36,35 @@ def create_model() -> tf.keras.Model:
     return model
 
 
+def stratified_split(features, labels, test_fraction=0.2):
+    rng = np.random.default_rng(SEED)
+    train_indices = []
+    test_indices = []
+    for label in np.unique(labels):
+        indices = np.flatnonzero(labels == label)
+        if len(indices) < 2:
+            raise ValueError("Each class must contain at least two rows")
+        rng.shuffle(indices)
+        test_count = min(len(indices) - 1, max(1, round(len(indices) * test_fraction)))
+        test_indices.extend(indices[:test_count])
+        train_indices.extend(indices[test_count:])
+    rng.shuffle(train_indices)
+    rng.shuffle(test_indices)
+    train_indices = np.asarray(train_indices, dtype=int)
+    test_indices = np.asarray(test_indices, dtype=int)
+    return (
+        scale_features(features[train_indices]),
+        scale_features(features[test_indices]),
+        labels[train_indices],
+        labels[test_indices],
+    )
+
+
 def load_factory_data(factory_name: str):
     if factory_name not in {"factory_1", "factory_2", "factory_3"}:
         raise ValueError("Factory must be factory_1, factory_2, or factory_3")
 
-    csv_path = Path(__file__).resolve().parent.parent / "data" / factory_name / "sensor_data.csv"
+    csv_path = DATA_DIR / factory_name / "sensor_data.csv"
     if not csv_path.is_file():
         raise FileNotFoundError(f"CSV not found: {csv_path}")
 
@@ -46,17 +80,9 @@ def load_factory_data(factory_name: str):
         raise ValueError(f"{csv_path}: unknown states: {unknown_labels}")
 
     y = df[LABEL].map({"normal": 0, "failure": 1}).to_numpy(dtype=np.float32)
-    if len(df) < 2 or len(np.unique(y)) < 2:
-        raise ValueError(f"{csv_path}: at least two valid rows and two classes are required")
-
-    X_train, X_test, y_train, y_test = train_test_split(
-        df[FEATURES].to_numpy(dtype=np.float32),
-        y,
-        test_size=0.2,
-        random_state=42,
-        stratify=y,
-    )
-    return scale_features(X_train), scale_features(X_test), y_train, y_test
+    if len(df) < 4 or len(np.unique(y)) != 2:
+        raise ValueError(f"{csv_path}: at least four valid rows and two classes are required")
+    return stratified_split(df[FEATURES].to_numpy(dtype=np.float32), y)
 
 
 def export_round_weights(factory_name: str, round_number: int, weights) -> None:
@@ -78,23 +104,39 @@ class FactoryClient(fl.client.NumPyClient):
         self.round = 0
         self.model = create_model()
         self.X_train, self.X_test, self.y_train, self.y_test = load_factory_data(factory_name)
+        counts = np.bincount(self.y_train.astype(int), minlength=2)
+        sample_count = len(self.y_train)
+        self.class_weights = {
+            label: sample_count / (2.0 * count)
+            for label, count in enumerate(counts)
+            if count > 0
+        }
 
     def get_parameters(self, config):
         return self.model.get_weights()
 
     def fit(self, parameters, config):
         self.model.set_weights(parameters)
-        self.model.fit(self.X_train, self.y_train, epochs=5, batch_size=32, verbose=0)
+        history = self.model.fit(
+            self.X_train,
+            self.y_train,
+            epochs=5,
+            batch_size=32,
+            class_weight=self.class_weights,
+            verbose=0,
+        )
         updated_weights = self.model.get_weights()
 
         self.round += 1
         export_round_weights(self.factory_name, self.round, updated_weights)
 
-        return updated_weights, len(self.X_train), {}
+        return updated_weights, len(self.X_train), {
+            "train_loss": float(history.history["loss"][-1])
+        }
 
     def evaluate(self, parameters, config):
         self.model.set_weights(parameters)
-        loss, _ = self.model.evaluate(self.X_test, self.y_test, verbose=0)
+        loss = self.model.evaluate(self.X_test, self.y_test, verbose=0)
         probabilities = self.model.predict(self.X_test, verbose=0).ravel()
         predictions = (probabilities >= 0.5).astype(int)
         metrics = {
@@ -112,8 +154,8 @@ def main() -> None:
         raise SystemExit("Usage: python client.py factory_1")
     factory_name = sys.argv[1]
     client = FactoryClient(factory_name)
-    print(f"Client {factory_name} ready; connecting to 127.0.0.1:8080")
-    fl.client.start_client(server_address="127.0.0.1:8080", client=client.to_client())
+    print(f"Client {factory_name} ready; connecting to {SERVER_ADDRESS}")
+    fl.client.start_client(server_address=SERVER_ADDRESS, client=client.to_client())
 
 
 if __name__ == "__main__":

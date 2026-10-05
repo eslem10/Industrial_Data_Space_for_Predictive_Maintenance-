@@ -2,7 +2,7 @@ import json
 import time
 import paho.mqtt.client as mqtt
 
-from data_generator import generate_sensor_data
+from stream_simulator import generate_measurement
 
 BROKER = "broker.emqx.io"
 PORT = 1883
@@ -37,10 +37,7 @@ try:
         for factory in FACTORIES:
 
             # Generate sensor measurements
-            data = generate_sensor_data(
-                factory,
-                timestamp_index
-            )
+            data = generate_measurement(factory, timestamp_index)
 
             # Remove the true state.
             # The ML model must predict it later.
@@ -71,4 +68,3 @@ except KeyboardInterrupt:
 
     client.loop_stop()
     client.disconnect()
-

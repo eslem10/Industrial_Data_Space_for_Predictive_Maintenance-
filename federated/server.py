@@ -1,5 +1,7 @@
 
 import os
+import json
+from pathlib import Path
 
 import flwr as fl
 import tensorflow as tf
@@ -44,6 +46,10 @@ def create_model():
 # ============================================================
 
 global_model = create_model()
+SERVER_ADDRESS = os.environ.get("SERVER_ADDRESS", "0.0.0.0:8080")
+NUM_ROUNDS = int(os.environ.get("NUM_ROUNDS", "5"))
+NUM_CLIENTS = int(os.environ.get("NUM_CLIENTS", "3"))
+METRICS_PATH = Path(__file__).resolve().parent / "results" / "metrics.json"
 
 
 # ============================================================
@@ -51,37 +57,13 @@ global_model = create_model()
 # ============================================================
 
 def weighted_average(metrics):
-
-    accuracies = [
-        num_examples * metrics_dict["accuracy"]
-        for num_examples, metrics_dict in metrics
-    ]
-
-    precisions = [
-        num_examples * metrics_dict["precision"]
-        for num_examples, metrics_dict in metrics
-    ]
-
-    recalls = [
-        num_examples * metrics_dict["recall"]
-        for num_examples, metrics_dict in metrics
-    ]
-
-    f1_scores = [
-        num_examples * metrics_dict["f1"]
-        for num_examples, metrics_dict in metrics
-    ]
-
-    total_examples = sum(
-        num_examples
-        for num_examples, _ in metrics
-    )
-
+    total_examples = sum(num_examples for num_examples, _ in metrics)
+    if total_examples == 0:
+        return {}
+    keys = set.intersection(*(set(values) for _, values in metrics)) if metrics else set()
     return {
-        "accuracy": sum(accuracies) / total_examples,
-        "precision": sum(precisions) / total_examples,
-        "recall": sum(recalls) / total_examples,
-        "f1": sum(f1_scores) / total_examples
+        key: sum(count * values[key] for count, values in metrics) / total_examples
+        for key in keys
     }
 
 
@@ -134,6 +116,17 @@ class SaveModelStrategy(fl.server.strategy.FedAvg):
 
         return aggregated_parameters, aggregated_metrics
 
+    def aggregate_evaluate(self, server_round, results, failures):
+        loss, metrics = super().aggregate_evaluate(server_round, results, failures)
+        metrics = metrics or {}
+        record = {"round": server_round, "loss": float(loss) if loss is not None else None}
+        record.update({key: float(metrics[key]) for key in ("accuracy", "precision", "recall", "f1") if key in metrics})
+        METRICS_PATH.parent.mkdir(parents=True, exist_ok=True)
+        records = json.loads(METRICS_PATH.read_text(encoding="utf-8")) if METRICS_PATH.exists() else []
+        records.append(record)
+        METRICS_PATH.write_text(json.dumps(records, indent=2), encoding="utf-8")
+        return loss, metrics
+
 
 # ============================================================
 # FedAvg Strategy
@@ -145,12 +138,13 @@ strategy = SaveModelStrategy(
 
     fraction_evaluate=1.0,
 
-    min_fit_clients=3,
+    min_fit_clients=NUM_CLIENTS,
 
-    min_evaluate_clients=3,
+    min_evaluate_clients=NUM_CLIENTS,
 
-    min_available_clients=3,
+    min_available_clients=NUM_CLIENTS,
 
+    fit_metrics_aggregation_fn=weighted_average,
     evaluate_metrics_aggregation_fn=weighted_average
 )
 
@@ -159,15 +153,20 @@ strategy = SaveModelStrategy(
 # Start Server
 # ============================================================
 
+if NUM_ROUNDS < 1 or NUM_CLIENTS < 3:
+    raise ValueError("NUM_ROUNDS must be positive and NUM_CLIENTS must be at least 3")
+
+METRICS_PATH.parent.mkdir(parents=True, exist_ok=True)
+METRICS_PATH.write_text("[]", encoding="utf-8")
 print("\nStarting Federated Learning server...")
-print("Waiting for 3 factories...\n")
+print(f"Waiting for {NUM_CLIENTS} factories...\n")
 
 fl.server.start_server(
 
-    server_address="0.0.0.0:8080",
+    server_address=SERVER_ADDRESS,
 
     config=fl.server.ServerConfig(
-        num_rounds=5
+        num_rounds=NUM_ROUNDS
     ),
 
     strategy=strategy
@@ -175,4 +174,3 @@ fl.server.start_server(
 
 print("\nFederated Learning finished.")
 print("Final global model saved.")
-
