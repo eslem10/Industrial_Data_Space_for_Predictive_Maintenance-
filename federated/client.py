@@ -136,7 +136,8 @@ class FactoryClient(fl.client.NumPyClient):
 
     def evaluate(self, parameters, config):
         self.model.set_weights(parameters)
-        loss = self.model.evaluate(self.X_test, self.y_test, verbose=0)
+        evaluation = self.model.evaluate(self.X_test, self.y_test, verbose=0)
+        loss = float(evaluation[0] if isinstance(evaluation, (list, tuple)) else evaluation)
         probabilities = self.model.predict(self.X_test, verbose=0).ravel()
         predictions = (probabilities >= 0.5).astype(int)
         metrics = {
@@ -146,7 +147,7 @@ class FactoryClient(fl.client.NumPyClient):
             "f1": float(f1_score(self.y_test, predictions, zero_division=0)),
         }
         print(f"[{self.factory_name}] {metrics}")
-        return float(loss), len(self.y_test), metrics
+        return loss, len(self.y_test), metrics
 
 
 def main() -> None:

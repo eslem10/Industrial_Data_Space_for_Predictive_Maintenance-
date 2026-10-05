@@ -110,7 +110,7 @@ class SaveModelStrategy(fl.server.strategy.FedAvg):
             global_model.save(model_path)
 
             print(
-                f"[Server] Global model saved → "
+                f"[Server] Global model saved -> "
                 f"{model_path}"
             )
 

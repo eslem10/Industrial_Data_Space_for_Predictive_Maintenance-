@@ -1,0 +1,12 @@
+[
+  {
+    "timestamp": "2026-01-09T07:59:00",
+    "factory_id": "F1",
+    "probability": 0.5529770851135254
+  },
+  {
+    "timestamp": "2026-01-09T07:59:00",
+    "factory_id": "F2",
+    "probability": 0.9949783682823181
+  }
+]
