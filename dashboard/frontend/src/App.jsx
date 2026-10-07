@@ -4,6 +4,7 @@ import SensorChart from "./components/SensorChart";
 import FLMetrics from "./components/FLMetrics";
 import Alerts from "./components/Alerts";
 import EDCStatus from "./components/EDCStatus";
+import { API_BASE_URL } from "./config";
 
 function App() {
   const [factories, setFactories] = useState([]);
@@ -21,7 +22,7 @@ function App() {
   // Fetch factories
   const fetchFactories = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/factories");
+      const response = await fetch(`${API_BASE_URL}/api/factories`);
       const data = await response.json();
       setFactories(data);
       setLastSyncTime(new Date().toLocaleTimeString());
@@ -34,7 +35,7 @@ function App() {
   const fetchHistory = async (factoryId) => {
     try {
       const response = await fetch(
-        `http://localhost:3001/api/factories/${factoryId}/history?limit=30`
+        `${API_BASE_URL}/api/factories/${factoryId}/history?limit=30`
       );
       const data = await response.json();
 
@@ -58,13 +59,25 @@ function App() {
   // Fetch FL metrics
   const fetchFLMetrics = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/fl/metrics");
+      const response = await fetch(`${API_BASE_URL}/api/fl/metrics`);
       const data = await response.json();
-      if (data && data.rounds) {
+      if (Array.isArray(data)) {
+        setFlMetrics(data);
+      } else if (data && Array.isArray(data.rounds)) {
         setFlMetrics(data.rounds);
       }
     } catch (error) {
       console.error("Error fetching FL metrics:", error);
+    }
+  };
+
+  const fetchMqttStatus = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/mqtt/status`);
+      const data = await response.json();
+      setMqttStatus(data);
+    } catch (error) {
+      console.error("Error fetching MQTT status:", error);
     }
   };
 
@@ -74,7 +87,8 @@ function App() {
     await Promise.all([
       fetchFactories(),
       fetchHistory(selectedFactory),
-      fetchFLMetrics()
+      fetchFLMetrics(),
+      fetchMqttStatus()
     ]);
     setCountdown(refreshIntervalSec);
     setTimeout(() => setIsRefreshing(false), 500);
@@ -510,7 +524,7 @@ function App() {
 
         {/* VIEW: OVERVIEW OR EDC */}
         {(activeTab === "overview" || activeTab === "edc") && (
-          <EDCStatus />
+          <EDCStatus apiBaseUrl={API_BASE_URL} />
         )}
       </main>
 

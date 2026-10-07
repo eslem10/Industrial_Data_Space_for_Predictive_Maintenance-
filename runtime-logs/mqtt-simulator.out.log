@@ -1,0 +1,701 @@
+Connecting to MQTT broker...
+Connected!
+Starting Industrial IoT simulation...
+------------------------------------------
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:41:20+01:00', 'factory_id': 'F1', 'temperature': 61.816, 'vibration': 1.932, 'pressure': 5.531, 'humidity': 44.411, 'energy_consumption': 10.353}
+[OK] F2 -> {'timestamp': '2026-10-06T09:41:21+01:00', 'factory_id': 'F2', 'temperature': 92.303, 'vibration': 1.986, 'pressure': 5.724, 'humidity': 70.382, 'energy_consumption': 9.916}
+[OK] F3 -> {'timestamp': '2026-10-06T09:41:21+01:00', 'factory_id': 'F3', 'temperature': 60.575, 'vibration': 0.972, 'pressure': 3.264, 'humidity': 46.244, 'energy_consumption': 7.913}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:41:51+01:00', 'factory_id': 'F1', 'temperature': 62.369, 'vibration': 1.464, 'pressure': 5.847, 'humidity': 59.002, 'energy_consumption': 9.683}
+[OK] F2 -> {'timestamp': '2026-10-06T09:41:51+01:00', 'factory_id': 'F2', 'temperature': 84.939, 'vibration': 2.237, 'pressure': 6.481, 'humidity': 71.953, 'energy_consumption': 12.904}
+[OK] F3 -> {'timestamp': '2026-10-06T09:41:51+01:00', 'factory_id': 'F3', 'temperature': 54.711, 'vibration': 0.948, 'pressure': 4.276, 'humidity': 45.062, 'energy_consumption': 8.547}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:42:21+01:00', 'factory_id': 'F1', 'temperature': 66.146, 'vibration': 1.964, 'pressure': 5.101, 'humidity': 41.254, 'energy_consumption': 9.642}
+[OK] F2 -> {'timestamp': '2026-10-06T09:42:21+01:00', 'factory_id': 'F2', 'temperature': 79.023, 'vibration': 2.403, 'pressure': 7.015, 'humidity': 64.82, 'energy_consumption': 9.922}
+[OK] F3 -> {'timestamp': '2026-10-06T09:42:21+01:00', 'factory_id': 'F3', 'temperature': 61.704, 'vibration': 0.976, 'pressure': 4.096, 'humidity': 44.421, 'energy_consumption': 8.895}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:42:51+01:00', 'factory_id': 'F1', 'temperature': 46.147, 'vibration': 1.344, 'pressure': 4.23, 'humidity': 67.854, 'energy_consumption': 8.722}
+[OK] F2 -> {'timestamp': '2026-10-06T09:42:51+01:00', 'factory_id': 'F2', 'temperature': 84.899, 'vibration': 2.134, 'pressure': 6.078, 'humidity': 65.427, 'energy_consumption': 10.876}
+[OK] F3 -> {'timestamp': '2026-10-06T09:42:51+01:00', 'factory_id': 'F3', 'temperature': 76.718, 'vibration': 0.866, 'pressure': 4.89, 'humidity': 33.804, 'energy_consumption': 9.31}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:43:21+01:00', 'factory_id': 'F1', 'temperature': 57.987, 'vibration': 1.344, 'pressure': 3.138, 'humidity': 61.85, 'energy_consumption': 8.543}
+[OK] F2 -> {'timestamp': '2026-10-06T09:43:21+01:00', 'factory_id': 'F2', 'temperature': 91.691, 'vibration': 2.124, 'pressure': 5.253, 'humidity': 72.391, 'energy_consumption': 11.458}
+[OK] F3 -> {'timestamp': '2026-10-06T09:43:21+01:00', 'factory_id': 'F3', 'temperature': 66.537, 'vibration': 0.928, 'pressure': 4.106, 'humidity': 56.828, 'energy_consumption': 8.083}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:43:51+01:00', 'factory_id': 'F1', 'temperature': 70.175, 'vibration': 1.737, 'pressure': 5.051, 'humidity': 48.446, 'energy_consumption': 9.401}
+[OK] F2 -> {'timestamp': '2026-10-06T09:43:51+01:00', 'factory_id': 'F2', 'temperature': 83.177, 'vibration': 2.15, 'pressure': 6.485, 'humidity': 76.076, 'energy_consumption': 11.345}
+[OK] F3 -> {'timestamp': '2026-10-06T09:43:51+01:00', 'factory_id': 'F3', 'temperature': 65.264, 'vibration': 0.893, 'pressure': 4.634, 'humidity': 63.026, 'energy_consumption': 8.435}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:44:21+01:00', 'factory_id': 'F1', 'temperature': 54.695, 'vibration': 1.259, 'pressure': 3.864, 'humidity': 61.945, 'energy_consumption': 8.2}
+[OK] F2 -> {'timestamp': '2026-10-06T09:44:21+01:00', 'factory_id': 'F2', 'temperature': 106.833, 'vibration': 2.245, 'pressure': 5.95, 'humidity': 73.987, 'energy_consumption': 10.255}
+[OK] F3 -> {'timestamp': '2026-10-06T09:44:21+01:00', 'factory_id': 'F3', 'temperature': 68.634, 'vibration': 0.661, 'pressure': 4.514, 'humidity': 44.927, 'energy_consumption': 7.831}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:44:51+01:00', 'factory_id': 'F1', 'temperature': 64.795, 'vibration': 1.534, 'pressure': 6.613, 'humidity': 59.961, 'energy_consumption': 9.123}
+[OK] F2 -> {'timestamp': '2026-10-06T09:44:51+01:00', 'factory_id': 'F2', 'temperature': 80.279, 'vibration': 1.785, 'pressure': 5.91, 'humidity': 55.704, 'energy_consumption': 7.944}
+[OK] F3 -> {'timestamp': '2026-10-06T09:44:51+01:00', 'factory_id': 'F3', 'temperature': 88.662, 'vibration': 1.61, 'pressure': 5.582, 'humidity': 38.813, 'energy_consumption': 10.703}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:45:21+01:00', 'factory_id': 'F1', 'temperature': 67.018, 'vibration': 1.92, 'pressure': 4.904, 'humidity': 50.768, 'energy_consumption': 9.832}
+[OK] F2 -> {'timestamp': '2026-10-06T09:45:21+01:00', 'factory_id': 'F2', 'temperature': 87.666, 'vibration': 2.061, 'pressure': 6.761, 'humidity': 68.342, 'energy_consumption': 11.584}
+[OK] F3 -> {'timestamp': '2026-10-06T09:45:21+01:00', 'factory_id': 'F3', 'temperature': 65.533, 'vibration': 0.89, 'pressure': 2.869, 'humidity': 46.178, 'energy_consumption': 6.554}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:45:51+01:00', 'factory_id': 'F1', 'temperature': 71.461, 'vibration': 2.052, 'pressure': 5.247, 'humidity': 59.081, 'energy_consumption': 11.042}
+[OK] F2 -> {'timestamp': '2026-10-06T09:45:51+01:00', 'factory_id': 'F2', 'temperature': 75.755, 'vibration': 2.08, 'pressure': 5.881, 'humidity': 71.856, 'energy_consumption': 9.978}
+[OK] F3 -> {'timestamp': '2026-10-06T09:45:51+01:00', 'factory_id': 'F3', 'temperature': 72.722, 'vibration': 1.498, 'pressure': 4.324, 'humidity': 46.17, 'energy_consumption': 8.75}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:46:21+01:00', 'factory_id': 'F1', 'temperature': 54.63, 'vibration': 1.105, 'pressure': 4.496, 'humidity': 53.35, 'energy_consumption': 7.456}
+[OK] F2 -> {'timestamp': '2026-10-06T09:46:21+01:00', 'factory_id': 'F2', 'temperature': 90.726, 'vibration': 2.042, 'pressure': 5.277, 'humidity': 51.245, 'energy_consumption': 12.686}
+[OK] F3 -> {'timestamp': '2026-10-06T09:46:21+01:00', 'factory_id': 'F3', 'temperature': 68.306, 'vibration': 0.634, 'pressure': 4.458, 'humidity': 43.133, 'energy_consumption': 8.766}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:46:51+01:00', 'factory_id': 'F1', 'temperature': 64.558, 'vibration': 1.887, 'pressure': 5.281, 'humidity': 56.161, 'energy_consumption': 9.187}
+[OK] F2 -> {'timestamp': '2026-10-06T09:46:51+01:00', 'factory_id': 'F2', 'temperature': 86.549, 'vibration': 1.785, 'pressure': 6.754, 'humidity': 66.654, 'energy_consumption': 9.498}
+[OK] F3 -> {'timestamp': '2026-10-06T09:46:51+01:00', 'factory_id': 'F3', 'temperature': 85.685, 'vibration': 0.77, 'pressure': 4.435, 'humidity': 49.716, 'energy_consumption': 8.552}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:47:21+01:00', 'factory_id': 'F1', 'temperature': 73.21, 'vibration': 1.653, 'pressure': 5.629, 'humidity': 60.456, 'energy_consumption': 11.2}
+[OK] F2 -> {'timestamp': '2026-10-06T09:47:21+01:00', 'factory_id': 'F2', 'temperature': 85.867, 'vibration': 2.202, 'pressure': 6.261, 'humidity': 65.616, 'energy_consumption': 10.56}
+[OK] F3 -> {'timestamp': '2026-10-06T09:47:21+01:00', 'factory_id': 'F3', 'temperature': 76.626, 'vibration': 0.927, 'pressure': 3.185, 'humidity': 54.689, 'energy_consumption': 7.914}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:47:51+01:00', 'factory_id': 'F1', 'temperature': 56.491, 'vibration': 1.921, 'pressure': 4.721, 'humidity': 60.303, 'energy_consumption': 9.204}
+[OK] F2 -> {'timestamp': '2026-10-06T09:47:51+01:00', 'factory_id': 'F2', 'temperature': 78.22, 'vibration': 2.051, 'pressure': 5.915, 'humidity': 71.531, 'energy_consumption': 9.792}
+[OK] F3 -> {'timestamp': '2026-10-06T09:47:51+01:00', 'factory_id': 'F3', 'temperature': 70.116, 'vibration': 0.571, 'pressure': 3.717, 'humidity': 41.413, 'energy_consumption': 9.391}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:48:21+01:00', 'factory_id': 'F1', 'temperature': 58.708, 'vibration': 2.022, 'pressure': 6.38, 'humidity': 50.637, 'energy_consumption': 8.889}
+[OK] F2 -> {'timestamp': '2026-10-06T09:48:21+01:00', 'factory_id': 'F2', 'temperature': 86.088, 'vibration': 1.963, 'pressure': 6.434, 'humidity': 53.736, 'energy_consumption': 10.699}
+[OK] F3 -> {'timestamp': '2026-10-06T09:48:21+01:00', 'factory_id': 'F3', 'temperature': 72.203, 'vibration': 0.81, 'pressure': 3.924, 'humidity': 47.129, 'energy_consumption': 10.489}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:48:51+01:00', 'factory_id': 'F1', 'temperature': 59.834, 'vibration': 1.813, 'pressure': 4.6, 'humidity': 49.036, 'energy_consumption': 11.074}
+[OK] F2 -> {'timestamp': '2026-10-06T09:48:51+01:00', 'factory_id': 'F2', 'temperature': 86.073, 'vibration': 2.416, 'pressure': 6.829, 'humidity': 72.67, 'energy_consumption': 9.544}
+[OK] F3 -> {'timestamp': '2026-10-06T09:48:51+01:00', 'factory_id': 'F3', 'temperature': 94.77, 'vibration': 1.359, 'pressure': 4.046, 'humidity': 54.015, 'energy_consumption': 12.829}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:49:21+01:00', 'factory_id': 'F1', 'temperature': 80.603, 'vibration': 1.77, 'pressure': 4.545, 'humidity': 44.364, 'energy_consumption': 11.885}
+[OK] F2 -> {'timestamp': '2026-10-06T09:49:21+01:00', 'factory_id': 'F2', 'temperature': 87.853, 'vibration': 2.104, 'pressure': 5.208, 'humidity': 79.537, 'energy_consumption': 9.253}
+[OK] F3 -> {'timestamp': '2026-10-06T09:49:21+01:00', 'factory_id': 'F3', 'temperature': 64.832, 'vibration': 1.068, 'pressure': 4.325, 'humidity': 60.866, 'energy_consumption': 8.285}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:49:51+01:00', 'factory_id': 'F1', 'temperature': 69.542, 'vibration': 1.856, 'pressure': 5.202, 'humidity': 51.536, 'energy_consumption': 8.211}
+[OK] F2 -> {'timestamp': '2026-10-06T09:49:51+01:00', 'factory_id': 'F2', 'temperature': 78.693, 'vibration': 1.573, 'pressure': 6.739, 'humidity': 66.007, 'energy_consumption': 9.443}
+[OK] F3 -> {'timestamp': '2026-10-06T09:49:51+01:00', 'factory_id': 'F3', 'temperature': 58.966, 'vibration': 0.862, 'pressure': 3.371, 'humidity': 39.288, 'energy_consumption': 9.485}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:50:21+01:00', 'factory_id': 'F1', 'temperature': 58.138, 'vibration': 2.052, 'pressure': 5.901, 'humidity': 64.051, 'energy_consumption': 8.544}
+[OK] F2 -> {'timestamp': '2026-10-06T09:50:21+01:00', 'factory_id': 'F2', 'temperature': 92.974, 'vibration': 2.217, 'pressure': 6.072, 'humidity': 59.368, 'energy_consumption': 11.383}
+[OK] F3 -> {'timestamp': '2026-10-06T09:50:21+01:00', 'factory_id': 'F3', 'temperature': 67.013, 'vibration': 0.948, 'pressure': 4.281, 'humidity': 47.028, 'energy_consumption': 9.191}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:50:51+01:00', 'factory_id': 'F1', 'temperature': 61.913, 'vibration': 1.778, 'pressure': 5.288, 'humidity': 46.348, 'energy_consumption': 8.804}
+[OK] F2 -> {'timestamp': '2026-10-06T09:50:51+01:00', 'factory_id': 'F2', 'temperature': 69.288, 'vibration': 2.124, 'pressure': 6.007, 'humidity': 56.128, 'energy_consumption': 11.065}
+[OK] F3 -> {'timestamp': '2026-10-06T09:50:51+01:00', 'factory_id': 'F3', 'temperature': 76.181, 'vibration': 0.919, 'pressure': 4.224, 'humidity': 62.802, 'energy_consumption': 9.067}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:51:21+01:00', 'factory_id': 'F1', 'temperature': 50.733, 'vibration': 1.234, 'pressure': 4.291, 'humidity': 59.53, 'energy_consumption': 8.251}
+[OK] F2 -> {'timestamp': '2026-10-06T09:51:21+01:00', 'factory_id': 'F2', 'temperature': 82.664, 'vibration': 1.945, 'pressure': 6.987, 'humidity': 76.956, 'energy_consumption': 10.839}
+[OK] F3 -> {'timestamp': '2026-10-06T09:51:21+01:00', 'factory_id': 'F3', 'temperature': 79.526, 'vibration': 1.433, 'pressure': 4.792, 'humidity': 51.34, 'energy_consumption': 12.386}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:51:51+01:00', 'factory_id': 'F1', 'temperature': 63.494, 'vibration': 1.934, 'pressure': 5.707, 'humidity': 50.276, 'energy_consumption': 8.828}
+[OK] F2 -> {'timestamp': '2026-10-06T09:51:51+01:00', 'factory_id': 'F2', 'temperature': 88.137, 'vibration': 1.743, 'pressure': 4.865, 'humidity': 64.568, 'energy_consumption': 8.997}
+[OK] F3 -> {'timestamp': '2026-10-06T09:51:51+01:00', 'factory_id': 'F3', 'temperature': 68.481, 'vibration': 0.818, 'pressure': 4.918, 'humidity': 34.504, 'energy_consumption': 9.082}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:52:21+01:00', 'factory_id': 'F1', 'temperature': 64.144, 'vibration': 1.903, 'pressure': 6.199, 'humidity': 47.145, 'energy_consumption': 10.05}
+[OK] F2 -> {'timestamp': '2026-10-06T09:52:21+01:00', 'factory_id': 'F2', 'temperature': 91.596, 'vibration': 1.823, 'pressure': 5.357, 'humidity': 66.88, 'energy_consumption': 10.847}
+[OK] F3 -> {'timestamp': '2026-10-06T09:52:21+01:00', 'factory_id': 'F3', 'temperature': 72.155, 'vibration': 0.942, 'pressure': 4.645, 'humidity': 51.096, 'energy_consumption': 8.766}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:52:51+01:00', 'factory_id': 'F1', 'temperature': 72.586, 'vibration': 1.783, 'pressure': 6.28, 'humidity': 51.454, 'energy_consumption': 8.864}
+[OK] F2 -> {'timestamp': '2026-10-06T09:52:51+01:00', 'factory_id': 'F2', 'temperature': 67.584, 'vibration': 1.946, 'pressure': 4.659, 'humidity': 69.157, 'energy_consumption': 11.729}
+[OK] F3 -> {'timestamp': '2026-10-06T09:52:51+01:00', 'factory_id': 'F3', 'temperature': 46.746, 'vibration': 0.96, 'pressure': 3.253, 'humidity': 46.588, 'energy_consumption': 8.807}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:53:21+01:00', 'factory_id': 'F1', 'temperature': 65.548, 'vibration': 2.197, 'pressure': 4.887, 'humidity': 57.382, 'energy_consumption': 10.269}
+[OK] F2 -> {'timestamp': '2026-10-06T09:53:21+01:00', 'factory_id': 'F2', 'temperature': 88.185, 'vibration': 2.079, 'pressure': 5.496, 'humidity': 66.009, 'energy_consumption': 9.893}
+[OK] F3 -> {'timestamp': '2026-10-06T09:53:21+01:00', 'factory_id': 'F3', 'temperature': 64.698, 'vibration': 0.578, 'pressure': 4.431, 'humidity': 51.641, 'energy_consumption': 9.456}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:53:51+01:00', 'factory_id': 'F1', 'temperature': 62.568, 'vibration': 1.783, 'pressure': 5.797, 'humidity': 62.356, 'energy_consumption': 10.529}
+[OK] F2 -> {'timestamp': '2026-10-06T09:53:51+01:00', 'factory_id': 'F2', 'temperature': 84.344, 'vibration': 2.005, 'pressure': 6.082, 'humidity': 64.502, 'energy_consumption': 14.048}
+[OK] F3 -> {'timestamp': '2026-10-06T09:53:51+01:00', 'factory_id': 'F3', 'temperature': 73.136, 'vibration': 0.754, 'pressure': 4.004, 'humidity': 32.956, 'energy_consumption': 7.83}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:54:21+01:00', 'factory_id': 'F1', 'temperature': 69.379, 'vibration': 1.585, 'pressure': 5.136, 'humidity': 66.5, 'energy_consumption': 9.986}
+[OK] F2 -> {'timestamp': '2026-10-06T09:54:21+01:00', 'factory_id': 'F2', 'temperature': 84.926, 'vibration': 2.392, 'pressure': 5.366, 'humidity': 63.912, 'energy_consumption': 8.053}
+[OK] F3 -> {'timestamp': '2026-10-06T09:54:21+01:00', 'factory_id': 'F3', 'temperature': 49.752, 'vibration': 0.906, 'pressure': 3.69, 'humidity': 42.162, 'energy_consumption': 8.39}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:54:51+01:00', 'factory_id': 'F1', 'temperature': 69.85, 'vibration': 1.688, 'pressure': 5.482, 'humidity': 61.212, 'energy_consumption': 7.809}
+[OK] F2 -> {'timestamp': '2026-10-06T09:54:51+01:00', 'factory_id': 'F2', 'temperature': 78.475, 'vibration': 2.211, 'pressure': 4.761, 'humidity': 64.766, 'energy_consumption': 11.328}
+[OK] F3 -> {'timestamp': '2026-10-06T09:54:51+01:00', 'factory_id': 'F3', 'temperature': 67.579, 'vibration': 1.35, 'pressure': 5.116, 'humidity': 49.35, 'energy_consumption': 11.174}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:55:21+01:00', 'factory_id': 'F1', 'temperature': 66.254, 'vibration': 1.72, 'pressure': 6.081, 'humidity': 59.937, 'energy_consumption': 10.247}
+[OK] F2 -> {'timestamp': '2026-10-06T09:55:21+01:00', 'factory_id': 'F2', 'temperature': 77.258, 'vibration': 1.994, 'pressure': 5.406, 'humidity': 64.722, 'energy_consumption': 11.153}
+[OK] F3 -> {'timestamp': '2026-10-06T09:55:21+01:00', 'factory_id': 'F3', 'temperature': 76.735, 'vibration': 1.013, 'pressure': 4.5, 'humidity': 34.778, 'energy_consumption': 11.439}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:55:51+01:00', 'factory_id': 'F1', 'temperature': 59.318, 'vibration': 1.967, 'pressure': 5.802, 'humidity': 52.757, 'energy_consumption': 10.029}
+[OK] F2 -> {'timestamp': '2026-10-06T09:55:51+01:00', 'factory_id': 'F2', 'temperature': 59.844, 'vibration': 1.342, 'pressure': 5.57, 'humidity': 79.316, 'energy_consumption': 7.127}
+[OK] F3 -> {'timestamp': '2026-10-06T09:55:51+01:00', 'factory_id': 'F3', 'temperature': 68.185, 'vibration': 0.748, 'pressure': 4.058, 'humidity': 57.235, 'energy_consumption': 8.03}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:56:21+01:00', 'factory_id': 'F1', 'temperature': 59.462, 'vibration': 1.806, 'pressure': 5.879, 'humidity': 64.838, 'energy_consumption': 11.105}
+[OK] F2 -> {'timestamp': '2026-10-06T09:56:21+01:00', 'factory_id': 'F2', 'temperature': 95.812, 'vibration': 2.153, 'pressure': 6.914, 'humidity': 70.954, 'energy_consumption': 8.43}
+[OK] F3 -> {'timestamp': '2026-10-06T09:56:21+01:00', 'factory_id': 'F3', 'temperature': 74.451, 'vibration': 1.018, 'pressure': 4.763, 'humidity': 50.275, 'energy_consumption': 7.889}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:56:51+01:00', 'factory_id': 'F1', 'temperature': 65.769, 'vibration': 1.849, 'pressure': 5.299, 'humidity': 47.573, 'energy_consumption': 9.31}
+[OK] F2 -> {'timestamp': '2026-10-06T09:56:51+01:00', 'factory_id': 'F2', 'temperature': 76.148, 'vibration': 2.201, 'pressure': 6.424, 'humidity': 64.423, 'energy_consumption': 8.818}
+[OK] F3 -> {'timestamp': '2026-10-06T09:56:51+01:00', 'factory_id': 'F3', 'temperature': 77.049, 'vibration': 0.979, 'pressure': 3.777, 'humidity': 44.451, 'energy_consumption': 9.085}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:57:21+01:00', 'factory_id': 'F1', 'temperature': 72.015, 'vibration': 1.968, 'pressure': 5.002, 'humidity': 59.649, 'energy_consumption': 7.948}
+[OK] F2 -> {'timestamp': '2026-10-06T09:57:21+01:00', 'factory_id': 'F2', 'temperature': 70.831, 'vibration': 1.325, 'pressure': 4.825, 'humidity': 70.83, 'energy_consumption': 8.677}
+[OK] F3 -> {'timestamp': '2026-10-06T09:57:21+01:00', 'factory_id': 'F3', 'temperature': 70.41, 'vibration': 0.811, 'pressure': 4.518, 'humidity': 51.729, 'energy_consumption': 8.16}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:57:51+01:00', 'factory_id': 'F1', 'temperature': 63.035, 'vibration': 1.77, 'pressure': 5.868, 'humidity': 60.912, 'energy_consumption': 10.277}
+[OK] F2 -> {'timestamp': '2026-10-06T09:57:51+01:00', 'factory_id': 'F2', 'temperature': 97.427, 'vibration': 2.192, 'pressure': 3.904, 'humidity': 62.829, 'energy_consumption': 10.583}
+[OK] F3 -> {'timestamp': '2026-10-06T09:57:51+01:00', 'factory_id': 'F3', 'temperature': 70.531, 'vibration': 0.849, 'pressure': 3.348, 'humidity': 35.184, 'energy_consumption': 7.638}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:58:21+01:00', 'factory_id': 'F1', 'temperature': 60.589, 'vibration': 1.8, 'pressure': 6.435, 'humidity': 49.265, 'energy_consumption': 8.453}
+[OK] F2 -> {'timestamp': '2026-10-06T09:58:21+01:00', 'factory_id': 'F2', 'temperature': 102.594, 'vibration': 2.245, 'pressure': 6.215, 'humidity': 62.937, 'energy_consumption': 12.173}
+[OK] F3 -> {'timestamp': '2026-10-06T09:58:21+01:00', 'factory_id': 'F3', 'temperature': 70.572, 'vibration': 1.706, 'pressure': 3.789, 'humidity': 49.773, 'energy_consumption': 9.754}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:58:51+01:00', 'factory_id': 'F1', 'temperature': 60.789, 'vibration': 1.894, 'pressure': 5.266, 'humidity': 83.849, 'energy_consumption': 9.381}
+[OK] F2 -> {'timestamp': '2026-10-06T09:58:51+01:00', 'factory_id': 'F2', 'temperature': 99.639, 'vibration': 2.107, 'pressure': 5.81, 'humidity': 69.502, 'energy_consumption': 10.636}
+[OK] F3 -> {'timestamp': '2026-10-06T09:58:51+01:00', 'factory_id': 'F3', 'temperature': 68.304, 'vibration': 0.603, 'pressure': 3.095, 'humidity': 48.51, 'energy_consumption': 7.719}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:59:21+01:00', 'factory_id': 'F1', 'temperature': 77.715, 'vibration': 1.997, 'pressure': 4.85, 'humidity': 61.556, 'energy_consumption': 8.44}
+[OK] F2 -> {'timestamp': '2026-10-06T09:59:21+01:00', 'factory_id': 'F2', 'temperature': 85.382, 'vibration': 2.503, 'pressure': 5.625, 'humidity': 77.984, 'energy_consumption': 11.818}
+[OK] F3 -> {'timestamp': '2026-10-06T09:59:21+01:00', 'factory_id': 'F3', 'temperature': 69.732, 'vibration': 0.451, 'pressure': 4.081, 'humidity': 45.922, 'energy_consumption': 8.666}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T09:59:51+01:00', 'factory_id': 'F1', 'temperature': 67.231, 'vibration': 1.714, 'pressure': 5.529, 'humidity': 52.013, 'energy_consumption': 9.676}
+[OK] F2 -> {'timestamp': '2026-10-06T09:59:51+01:00', 'factory_id': 'F2', 'temperature': 70.281, 'vibration': 2.188, 'pressure': 6.4, 'humidity': 71.194, 'energy_consumption': 12.169}
+[OK] F3 -> {'timestamp': '2026-10-06T09:59:51+01:00', 'factory_id': 'F3', 'temperature': 85.103, 'vibration': 0.904, 'pressure': 3.461, 'humidity': 46.868, 'energy_consumption': 10.379}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:00:21+01:00', 'factory_id': 'F1', 'temperature': 56.483, 'vibration': 2.079, 'pressure': 5.621, 'humidity': 61.305, 'energy_consumption': 8.052}
+[OK] F2 -> {'timestamp': '2026-10-06T10:00:21+01:00', 'factory_id': 'F2', 'temperature': 86.23, 'vibration': 2.254, 'pressure': 4.906, 'humidity': 63.582, 'energy_consumption': 11.206}
+[OK] F3 -> {'timestamp': '2026-10-06T10:00:21+01:00', 'factory_id': 'F3', 'temperature': 79.112, 'vibration': 0.911, 'pressure': 3.253, 'humidity': 57.651, 'energy_consumption': 10.489}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:00:51+01:00', 'factory_id': 'F1', 'temperature': 58.662, 'vibration': 2.001, 'pressure': 5.41, 'humidity': 51.992, 'energy_consumption': 9.019}
+[OK] F2 -> {'timestamp': '2026-10-06T10:00:51+01:00', 'factory_id': 'F2', 'temperature': 87.312, 'vibration': 2.23, 'pressure': 5.076, 'humidity': 76.236, 'energy_consumption': 11.255}
+[OK] F3 -> {'timestamp': '2026-10-06T10:00:51+01:00', 'factory_id': 'F3', 'temperature': 61.765, 'vibration': 0.708, 'pressure': 3.507, 'humidity': 50.625, 'energy_consumption': 9.9}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:01:21+01:00', 'factory_id': 'F1', 'temperature': 61.577, 'vibration': 2.157, 'pressure': 5.804, 'humidity': 56.197, 'energy_consumption': 7.808}
+[OK] F2 -> {'timestamp': '2026-10-06T10:01:21+01:00', 'factory_id': 'F2', 'temperature': 74.041, 'vibration': 2.223, 'pressure': 5.773, 'humidity': 62.586, 'energy_consumption': 12.65}
+[OK] F3 -> {'timestamp': '2026-10-06T10:01:21+01:00', 'factory_id': 'F3', 'temperature': 93.357, 'vibration': 0.961, 'pressure': 4.292, 'humidity': 56.685, 'energy_consumption': 10.591}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:01:51+01:00', 'factory_id': 'F1', 'temperature': 71.898, 'vibration': 2.268, 'pressure': 6.032, 'humidity': 61.758, 'energy_consumption': 10.202}
+[OK] F2 -> {'timestamp': '2026-10-06T10:01:51+01:00', 'factory_id': 'F2', 'temperature': 86.825, 'vibration': 2.135, 'pressure': 6.08, 'humidity': 66.836, 'energy_consumption': 11.533}
+[OK] F3 -> {'timestamp': '2026-10-06T10:01:51+01:00', 'factory_id': 'F3', 'temperature': 69.581, 'vibration': 0.687, 'pressure': 4.64, 'humidity': 41.215, 'energy_consumption': 8.04}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:02:21+01:00', 'factory_id': 'F1', 'temperature': 67.126, 'vibration': 2.173, 'pressure': 5.811, 'humidity': 57.487, 'energy_consumption': 9.973}
+[OK] F2 -> {'timestamp': '2026-10-06T10:02:21+01:00', 'factory_id': 'F2', 'temperature': 79.681, 'vibration': 1.704, 'pressure': 4.743, 'humidity': 51.158, 'energy_consumption': 9.956}
+[OK] F3 -> {'timestamp': '2026-10-06T10:02:21+01:00', 'factory_id': 'F3', 'temperature': 78.028, 'vibration': 0.772, 'pressure': 3.665, 'humidity': 41.021, 'energy_consumption': 6.75}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:02:51+01:00', 'factory_id': 'F1', 'temperature': 78.567, 'vibration': 1.698, 'pressure': 5.39, 'humidity': 63.295, 'energy_consumption': 10.606}
+[OK] F2 -> {'timestamp': '2026-10-06T10:02:51+01:00', 'factory_id': 'F2', 'temperature': 90.779, 'vibration': 1.803, 'pressure': 5.527, 'humidity': 66.128, 'energy_consumption': 11.838}
+[OK] F3 -> {'timestamp': '2026-10-06T10:02:51+01:00', 'factory_id': 'F3', 'temperature': 72.536, 'vibration': 0.688, 'pressure': 4.247, 'humidity': 38.078, 'energy_consumption': 10.468}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:03:21+01:00', 'factory_id': 'F1', 'temperature': 59.459, 'vibration': 1.645, 'pressure': 5.275, 'humidity': 59.303, 'energy_consumption': 8.55}
+[OK] F2 -> {'timestamp': '2026-10-06T10:03:21+01:00', 'factory_id': 'F2', 'temperature': 79.738, 'vibration': 2.185, 'pressure': 6.276, 'humidity': 72.558, 'energy_consumption': 11.584}
+[OK] F3 -> {'timestamp': '2026-10-06T10:03:21+01:00', 'factory_id': 'F3', 'temperature': 60.362, 'vibration': 0.963, 'pressure': 3.733, 'humidity': 51.162, 'energy_consumption': 9.74}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:03:51+01:00', 'factory_id': 'F1', 'temperature': 53.86, 'vibration': 2.025, 'pressure': 6.258, 'humidity': 50.005, 'energy_consumption': 9.192}
+[OK] F2 -> {'timestamp': '2026-10-06T10:03:51+01:00', 'factory_id': 'F2', 'temperature': 79.94, 'vibration': 1.973, 'pressure': 6.011, 'humidity': 55.41, 'energy_consumption': 12.073}
+[OK] F3 -> {'timestamp': '2026-10-06T10:03:51+01:00', 'factory_id': 'F3', 'temperature': 64.708, 'vibration': 0.608, 'pressure': 4.322, 'humidity': 47.823, 'energy_consumption': 6.871}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:04:21+01:00', 'factory_id': 'F1', 'temperature': 59.57, 'vibration': 1.806, 'pressure': 5.381, 'humidity': 57.44, 'energy_consumption': 9.579}
+[OK] F2 -> {'timestamp': '2026-10-06T10:04:21+01:00', 'factory_id': 'F2', 'temperature': 82.593, 'vibration': 2.216, 'pressure': 6.32, 'humidity': 77.739, 'energy_consumption': 11.249}
+[OK] F3 -> {'timestamp': '2026-10-06T10:04:21+01:00', 'factory_id': 'F3', 'temperature': 70.651, 'vibration': 0.781, 'pressure': 2.728, 'humidity': 53.145, 'energy_consumption': 11.859}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:04:51+01:00', 'factory_id': 'F1', 'temperature': 69.397, 'vibration': 1.912, 'pressure': 4.768, 'humidity': 66.724, 'energy_consumption': 10.687}
+[OK] F2 -> {'timestamp': '2026-10-06T10:04:51+01:00', 'factory_id': 'F2', 'temperature': 89.311, 'vibration': 2.01, 'pressure': 7.149, 'humidity': 65.689, 'energy_consumption': 11.005}
+[OK] F3 -> {'timestamp': '2026-10-06T10:04:51+01:00', 'factory_id': 'F3', 'temperature': 72.588, 'vibration': 0.78, 'pressure': 4.774, 'humidity': 39.307, 'energy_consumption': 7.602}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:05:21+01:00', 'factory_id': 'F1', 'temperature': 70.554, 'vibration': 2.021, 'pressure': 4.976, 'humidity': 43.053, 'energy_consumption': 8.129}
+[OK] F2 -> {'timestamp': '2026-10-06T10:05:21+01:00', 'factory_id': 'F2', 'temperature': 75.412, 'vibration': 2.233, 'pressure': 7.097, 'humidity': 67.172, 'energy_consumption': 10.814}
+[OK] F3 -> {'timestamp': '2026-10-06T10:05:21+01:00', 'factory_id': 'F3', 'temperature': 59.416, 'vibration': 0.816, 'pressure': 3.173, 'humidity': 56.579, 'energy_consumption': 9.522}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:05:51+01:00', 'factory_id': 'F1', 'temperature': 64.409, 'vibration': 2.213, 'pressure': 5.144, 'humidity': 45.437, 'energy_consumption': 9.261}
+[OK] F2 -> {'timestamp': '2026-10-06T10:05:51+01:00', 'factory_id': 'F2', 'temperature': 101.5, 'vibration': 2.071, 'pressure': 5.921, 'humidity': 46.753, 'energy_consumption': 10.983}
+[OK] F3 -> {'timestamp': '2026-10-06T10:05:51+01:00', 'factory_id': 'F3', 'temperature': 68.193, 'vibration': 0.838, 'pressure': 4.186, 'humidity': 38.84, 'energy_consumption': 10.102}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:06:21+01:00', 'factory_id': 'F1', 'temperature': 67.022, 'vibration': 1.741, 'pressure': 6.835, 'humidity': 66.604, 'energy_consumption': 9.36}
+[OK] F2 -> {'timestamp': '2026-10-06T10:06:21+01:00', 'factory_id': 'F2', 'temperature': 89.702, 'vibration': 2.106, 'pressure': 6.432, 'humidity': 70.7, 'energy_consumption': 9.107}
+[OK] F3 -> {'timestamp': '2026-10-06T10:06:21+01:00', 'factory_id': 'F3', 'temperature': 61.966, 'vibration': 0.665, 'pressure': 3.018, 'humidity': 41.006, 'energy_consumption': 9.173}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:06:51+01:00', 'factory_id': 'F1', 'temperature': 62.453, 'vibration': 1.467, 'pressure': 5.217, 'humidity': 46.315, 'energy_consumption': 12.987}
+[OK] F2 -> {'timestamp': '2026-10-06T10:06:51+01:00', 'factory_id': 'F2', 'temperature': 82.152, 'vibration': 2.312, 'pressure': 6.856, 'humidity': 88.007, 'energy_consumption': 11.392}
+[OK] F3 -> {'timestamp': '2026-10-06T10:06:51+01:00', 'factory_id': 'F3', 'temperature': 61.144, 'vibration': 0.667, 'pressure': 4.133, 'humidity': 43.856, 'energy_consumption': 9.299}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:07:21+01:00', 'factory_id': 'F1', 'temperature': 74.434, 'vibration': 1.968, 'pressure': 5.349, 'humidity': 53.341, 'energy_consumption': 9.213}
+[OK] F2 -> {'timestamp': '2026-10-06T10:07:21+01:00', 'factory_id': 'F2', 'temperature': 90.592, 'vibration': 1.958, 'pressure': 6.121, 'humidity': 75.004, 'energy_consumption': 11.438}
+[OK] F3 -> {'timestamp': '2026-10-06T10:07:21+01:00', 'factory_id': 'F3', 'temperature': 73.806, 'vibration': 0.866, 'pressure': 3.744, 'humidity': 52.028, 'energy_consumption': 8.879}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:07:51+01:00', 'factory_id': 'F1', 'temperature': 56.904, 'vibration': 1.706, 'pressure': 5.271, 'humidity': 50.395, 'energy_consumption': 8.204}
+[OK] F2 -> {'timestamp': '2026-10-06T10:07:51+01:00', 'factory_id': 'F2', 'temperature': 76.813, 'vibration': 1.277, 'pressure': 4.965, 'humidity': 68.247, 'energy_consumption': 7.488}
+[OK] F3 -> {'timestamp': '2026-10-06T10:07:51+01:00', 'factory_id': 'F3', 'temperature': 65.282, 'vibration': 0.846, 'pressure': 2.834, 'humidity': 53.062, 'energy_consumption': 8.468}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:08:21+01:00', 'factory_id': 'F1', 'temperature': 61.089, 'vibration': 1.677, 'pressure': 5.655, 'humidity': 57.321, 'energy_consumption': 11.043}
+[OK] F2 -> {'timestamp': '2026-10-06T10:08:21+01:00', 'factory_id': 'F2', 'temperature': 89.073, 'vibration': 2.078, 'pressure': 5.039, 'humidity': 78.564, 'energy_consumption': 10.647}
+[OK] F3 -> {'timestamp': '2026-10-06T10:08:21+01:00', 'factory_id': 'F3', 'temperature': 70.517, 'vibration': 0.684, 'pressure': 3.395, 'humidity': 48.617, 'energy_consumption': 7.456}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:08:51+01:00', 'factory_id': 'F1', 'temperature': 69.189, 'vibration': 2.156, 'pressure': 4.434, 'humidity': 40.035, 'energy_consumption': 11.095}
+[OK] F2 -> {'timestamp': '2026-10-06T10:08:51+01:00', 'factory_id': 'F2', 'temperature': 87.076, 'vibration': 2.004, 'pressure': 5.23, 'humidity': 73.918, 'energy_consumption': 11.398}
+[OK] F3 -> {'timestamp': '2026-10-06T10:08:51+01:00', 'factory_id': 'F3', 'temperature': 61.51, 'vibration': 0.661, 'pressure': 3.862, 'humidity': 46.919, 'energy_consumption': 10.869}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:09:21+01:00', 'factory_id': 'F1', 'temperature': 71.251, 'vibration': 1.504, 'pressure': 5.081, 'humidity': 46.387, 'energy_consumption': 10.333}
+[OK] F2 -> {'timestamp': '2026-10-06T10:09:21+01:00', 'factory_id': 'F2', 'temperature': 76.615, 'vibration': 1.942, 'pressure': 5.594, 'humidity': 83.984, 'energy_consumption': 10.933}
+[OK] F3 -> {'timestamp': '2026-10-06T10:09:21+01:00', 'factory_id': 'F3', 'temperature': 57.823, 'vibration': 0.734, 'pressure': 4.55, 'humidity': 59.691, 'energy_consumption': 7.689}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:09:51+01:00', 'factory_id': 'F1', 'temperature': 63.994, 'vibration': 1.937, 'pressure': 6.479, 'humidity': 43.921, 'energy_consumption': 10.178}
+[OK] F2 -> {'timestamp': '2026-10-06T10:09:51+01:00', 'factory_id': 'F2', 'temperature': 91.767, 'vibration': 1.798, 'pressure': 6.073, 'humidity': 62.683, 'energy_consumption': 12.508}
+[OK] F3 -> {'timestamp': '2026-10-06T10:09:51+01:00', 'factory_id': 'F3', 'temperature': 70.012, 'vibration': 0.994, 'pressure': 3.964, 'humidity': 52.586, 'energy_consumption': 8.014}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:10:21+01:00', 'factory_id': 'F1', 'temperature': 69.346, 'vibration': 1.793, 'pressure': 6.869, 'humidity': 57.208, 'energy_consumption': 6.508}
+[OK] F2 -> {'timestamp': '2026-10-06T10:10:21+01:00', 'factory_id': 'F2', 'temperature': 83.927, 'vibration': 2.193, 'pressure': 5.072, 'humidity': 59.772, 'energy_consumption': 9.515}
+[OK] F3 -> {'timestamp': '2026-10-06T10:10:21+01:00', 'factory_id': 'F3', 'temperature': 62.799, 'vibration': 0.793, 'pressure': 3.74, 'humidity': 42.623, 'energy_consumption': 8.094}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:10:51+01:00', 'factory_id': 'F1', 'temperature': 60.334, 'vibration': 2.325, 'pressure': 5.133, 'humidity': 38.786, 'energy_consumption': 11.218}
+[OK] F2 -> {'timestamp': '2026-10-06T10:10:51+01:00', 'factory_id': 'F2', 'temperature': 91.33, 'vibration': 1.967, 'pressure': 6.712, 'humidity': 54.353, 'energy_consumption': 11.978}
+[OK] F3 -> {'timestamp': '2026-10-06T10:10:51+01:00', 'factory_id': 'F3', 'temperature': 78.688, 'vibration': 1.069, 'pressure': 3.481, 'humidity': 43.823, 'energy_consumption': 8.825}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:11:21+01:00', 'factory_id': 'F1', 'temperature': 62.765, 'vibration': 1.649, 'pressure': 4.868, 'humidity': 55.33, 'energy_consumption': 10.214}
+[OK] F2 -> {'timestamp': '2026-10-06T10:11:21+01:00', 'factory_id': 'F2', 'temperature': 95.487, 'vibration': 2.292, 'pressure': 5.92, 'humidity': 83.473, 'energy_consumption': 10.953}
+[OK] F3 -> {'timestamp': '2026-10-06T10:11:21+01:00', 'factory_id': 'F3', 'temperature': 60.752, 'vibration': 0.823, 'pressure': 3.729, 'humidity': 39.077, 'energy_consumption': 8.925}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:11:51+01:00', 'factory_id': 'F1', 'temperature': 74.937, 'vibration': 2.05, 'pressure': 5.49, 'humidity': 55.081, 'energy_consumption': 8.304}
+[OK] F2 -> {'timestamp': '2026-10-06T10:11:51+01:00', 'factory_id': 'F2', 'temperature': 83.304, 'vibration': 1.496, 'pressure': 4.381, 'humidity': 77.293, 'energy_consumption': 9.41}
+[OK] F3 -> {'timestamp': '2026-10-06T10:11:51+01:00', 'factory_id': 'F3', 'temperature': 66.359, 'vibration': 0.783, 'pressure': 3.732, 'humidity': 52.309, 'energy_consumption': 9.011}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:12:21+01:00', 'factory_id': 'F1', 'temperature': 70.992, 'vibration': 1.913, 'pressure': 5.53, 'humidity': 41.26, 'energy_consumption': 9.863}
+[OK] F2 -> {'timestamp': '2026-10-06T10:12:21+01:00', 'factory_id': 'F2', 'temperature': 87.402, 'vibration': 1.62, 'pressure': 5.545, 'humidity': 66.005, 'energy_consumption': 8.41}
+[OK] F3 -> {'timestamp': '2026-10-06T10:12:21+01:00', 'factory_id': 'F3', 'temperature': 70.181, 'vibration': 0.785, 'pressure': 3.731, 'humidity': 45.493, 'energy_consumption': 9.264}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:12:51+01:00', 'factory_id': 'F1', 'temperature': 67.959, 'vibration': 1.505, 'pressure': 5.772, 'humidity': 46.341, 'energy_consumption': 8.739}
+[OK] F2 -> {'timestamp': '2026-10-06T10:12:51+01:00', 'factory_id': 'F2', 'temperature': 79.222, 'vibration': 2.041, 'pressure': 5.719, 'humidity': 68.142, 'energy_consumption': 6.114}
+[OK] F3 -> {'timestamp': '2026-10-06T10:12:51+01:00', 'factory_id': 'F3', 'temperature': 68.521, 'vibration': 0.79, 'pressure': 5.112, 'humidity': 51.161, 'energy_consumption': 7.192}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:13:21+01:00', 'factory_id': 'F1', 'temperature': 62.536, 'vibration': 2.047, 'pressure': 5.75, 'humidity': 54.157, 'energy_consumption': 13.194}
+[OK] F2 -> {'timestamp': '2026-10-06T10:13:21+01:00', 'factory_id': 'F2', 'temperature': 91.682, 'vibration': 1.92, 'pressure': 5.554, 'humidity': 73.51, 'energy_consumption': 9.588}
+[OK] F3 -> {'timestamp': '2026-10-06T10:13:21+01:00', 'factory_id': 'F3', 'temperature': 72.085, 'vibration': 0.979, 'pressure': 3.926, 'humidity': 39.941, 'energy_consumption': 7.834}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:13:51+01:00', 'factory_id': 'F1', 'temperature': 49.48, 'vibration': 1.828, 'pressure': 6.452, 'humidity': 65.528, 'energy_consumption': 10.457}
+[OK] F2 -> {'timestamp': '2026-10-06T10:13:51+01:00', 'factory_id': 'F2', 'temperature': 72.942, 'vibration': 1.626, 'pressure': 6.335, 'humidity': 59.348, 'energy_consumption': 9.415}
+[OK] F3 -> {'timestamp': '2026-10-06T10:13:51+01:00', 'factory_id': 'F3', 'temperature': 59.721, 'vibration': 0.867, 'pressure': 3.537, 'humidity': 46.491, 'energy_consumption': 9.594}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:14:21+01:00', 'factory_id': 'F1', 'temperature': 55.891, 'vibration': 2.093, 'pressure': 5.734, 'humidity': 62.374, 'energy_consumption': 10.907}
+[OK] F2 -> {'timestamp': '2026-10-06T10:14:21+01:00', 'factory_id': 'F2', 'temperature': 82.139, 'vibration': 1.719, 'pressure': 5.595, 'humidity': 79.369, 'energy_consumption': 10.43}
+[OK] F3 -> {'timestamp': '2026-10-06T10:14:21+01:00', 'factory_id': 'F3', 'temperature': 61.677, 'vibration': 1.0, 'pressure': 4.569, 'humidity': 52.527, 'energy_consumption': 8.106}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:14:51+01:00', 'factory_id': 'F1', 'temperature': 50.5, 'vibration': 1.31, 'pressure': 4.142, 'humidity': 51.501, 'energy_consumption': 7.356}
+[OK] F2 -> {'timestamp': '2026-10-06T10:14:51+01:00', 'factory_id': 'F2', 'temperature': 77.427, 'vibration': 1.447, 'pressure': 4.788, 'humidity': 63.587, 'energy_consumption': 7.423}
+[OK] F3 -> {'timestamp': '2026-10-06T10:14:51+01:00', 'factory_id': 'F3', 'temperature': 89.81, 'vibration': 1.398, 'pressure': 4.958, 'humidity': 57.455, 'energy_consumption': 13.28}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:15:21+01:00', 'factory_id': 'F1', 'temperature': 76.159, 'vibration': 1.995, 'pressure': 4.739, 'humidity': 64.912, 'energy_consumption': 10.024}
+[OK] F2 -> {'timestamp': '2026-10-06T10:15:21+01:00', 'factory_id': 'F2', 'temperature': 91.555, 'vibration': 2.026, 'pressure': 5.704, 'humidity': 52.119, 'energy_consumption': 10.067}
+[OK] F3 -> {'timestamp': '2026-10-06T10:15:21+01:00', 'factory_id': 'F3', 'temperature': 68.259, 'vibration': 0.672, 'pressure': 3.771, 'humidity': 50.503, 'energy_consumption': 8.596}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:15:51+01:00', 'factory_id': 'F1', 'temperature': 61.862, 'vibration': 1.888, 'pressure': 6.611, 'humidity': 64.222, 'energy_consumption': 9.299}
+[OK] F2 -> {'timestamp': '2026-10-06T10:15:51+01:00', 'factory_id': 'F2', 'temperature': 90.2, 'vibration': 2.117, 'pressure': 5.392, 'humidity': 71.234, 'energy_consumption': 12.091}
+[OK] F3 -> {'timestamp': '2026-10-06T10:15:51+01:00', 'factory_id': 'F3', 'temperature': 65.701, 'vibration': 0.813, 'pressure': 3.565, 'humidity': 47.215, 'energy_consumption': 8.171}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:16:21+01:00', 'factory_id': 'F1', 'temperature': 70.828, 'vibration': 1.816, 'pressure': 5.719, 'humidity': 51.973, 'energy_consumption': 10.439}
+[OK] F2 -> {'timestamp': '2026-10-06T10:16:21+01:00', 'factory_id': 'F2', 'temperature': 79.094, 'vibration': 1.442, 'pressure': 4.636, 'humidity': 77.328, 'energy_consumption': 8.247}
+[OK] F3 -> {'timestamp': '2026-10-06T10:16:21+01:00', 'factory_id': 'F3', 'temperature': 64.824, 'vibration': 0.86, 'pressure': 4.104, 'humidity': 41.235, 'energy_consumption': 7.221}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:16:51+01:00', 'factory_id': 'F1', 'temperature': 75.372, 'vibration': 2.092, 'pressure': 5.632, 'humidity': 54.883, 'energy_consumption': 10.252}
+[OK] F2 -> {'timestamp': '2026-10-06T10:16:51+01:00', 'factory_id': 'F2', 'temperature': 93.407, 'vibration': 1.814, 'pressure': 4.812, 'humidity': 65.107, 'energy_consumption': 10.056}
+[OK] F3 -> {'timestamp': '2026-10-06T10:16:51+01:00', 'factory_id': 'F3', 'temperature': 54.731, 'vibration': 0.707, 'pressure': 3.665, 'humidity': 48.829, 'energy_consumption': 7.33}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:17:21+01:00', 'factory_id': 'F1', 'temperature': 61.776, 'vibration': 1.979, 'pressure': 5.269, 'humidity': 62.399, 'energy_consumption': 9.585}
+[OK] F2 -> {'timestamp': '2026-10-06T10:17:21+01:00', 'factory_id': 'F2', 'temperature': 87.317, 'vibration': 1.866, 'pressure': 5.513, 'humidity': 72.424, 'energy_consumption': 10.009}
+[OK] F3 -> {'timestamp': '2026-10-06T10:17:21+01:00', 'factory_id': 'F3', 'temperature': 65.28, 'vibration': 0.87, 'pressure': 3.785, 'humidity': 36.443, 'energy_consumption': 8.361}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:17:51+01:00', 'factory_id': 'F1', 'temperature': 65.298, 'vibration': 2.06, 'pressure': 4.589, 'humidity': 49.706, 'energy_consumption': 8.835}
+[OK] F2 -> {'timestamp': '2026-10-06T10:17:51+01:00', 'factory_id': 'F2', 'temperature': 90.952, 'vibration': 2.125, 'pressure': 6.657, 'humidity': 68.754, 'energy_consumption': 11.921}
+[OK] F3 -> {'timestamp': '2026-10-06T10:17:51+01:00', 'factory_id': 'F3', 'temperature': 67.552, 'vibration': 0.642, 'pressure': 5.046, 'humidity': 57.907, 'energy_consumption': 10.116}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:18:21+01:00', 'factory_id': 'F1', 'temperature': 70.717, 'vibration': 2.136, 'pressure': 4.924, 'humidity': 58.528, 'energy_consumption': 8.673}
+[OK] F2 -> {'timestamp': '2026-10-06T10:18:21+01:00', 'factory_id': 'F2', 'temperature': 89.461, 'vibration': 1.739, 'pressure': 5.667, 'humidity': 79.391, 'energy_consumption': 10.456}
+[OK] F3 -> {'timestamp': '2026-10-06T10:18:21+01:00', 'factory_id': 'F3', 'temperature': 71.43, 'vibration': 0.605, 'pressure': 3.31, 'humidity': 40.7, 'energy_consumption': 8.421}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:18:51+01:00', 'factory_id': 'F1', 'temperature': 69.83, 'vibration': 1.769, 'pressure': 5.432, 'humidity': 41.873, 'energy_consumption': 9.439}
+[OK] F2 -> {'timestamp': '2026-10-06T10:18:51+01:00', 'factory_id': 'F2', 'temperature': 72.162, 'vibration': 2.309, 'pressure': 5.153, 'humidity': 83.924, 'energy_consumption': 9.392}
+[OK] F3 -> {'timestamp': '2026-10-06T10:18:51+01:00', 'factory_id': 'F3', 'temperature': 63.766, 'vibration': 0.676, 'pressure': 3.516, 'humidity': 60.601, 'energy_consumption': 9.706}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:19:21+01:00', 'factory_id': 'F1', 'temperature': 80.016, 'vibration': 1.737, 'pressure': 5.257, 'humidity': 59.264, 'energy_consumption': 8.236}
+[OK] F2 -> {'timestamp': '2026-10-06T10:19:21+01:00', 'factory_id': 'F2', 'temperature': 87.464, 'vibration': 1.786, 'pressure': 7.263, 'humidity': 63.452, 'energy_consumption': 10.735}
+[OK] F3 -> {'timestamp': '2026-10-06T10:19:21+01:00', 'factory_id': 'F3', 'temperature': 77.745, 'vibration': 1.032, 'pressure': 4.16, 'humidity': 45.331, 'energy_consumption': 8.329}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:19:51+01:00', 'factory_id': 'F1', 'temperature': 65.083, 'vibration': 1.99, 'pressure': 7.009, 'humidity': 49.505, 'energy_consumption': 8.211}
+[OK] F2 -> {'timestamp': '2026-10-06T10:19:51+01:00', 'factory_id': 'F2', 'temperature': 81.248, 'vibration': 2.055, 'pressure': 5.79, 'humidity': 67.955, 'energy_consumption': 9.577}
+[OK] F3 -> {'timestamp': '2026-10-06T10:19:51+01:00', 'factory_id': 'F3', 'temperature': 62.248, 'vibration': 0.755, 'pressure': 3.244, 'humidity': 50.051, 'energy_consumption': 9.454}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:20:21+01:00', 'factory_id': 'F1', 'temperature': 59.214, 'vibration': 1.808, 'pressure': 4.387, 'humidity': 45.784, 'energy_consumption': 9.639}
+[OK] F2 -> {'timestamp': '2026-10-06T10:20:21+01:00', 'factory_id': 'F2', 'temperature': 79.534, 'vibration': 1.962, 'pressure': 5.724, 'humidity': 68.05, 'energy_consumption': 10.556}
+[OK] F3 -> {'timestamp': '2026-10-06T10:20:21+01:00', 'factory_id': 'F3', 'temperature': 58.878, 'vibration': 0.73, 'pressure': 3.379, 'humidity': 54.279, 'energy_consumption': 6.026}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:20:51+01:00', 'factory_id': 'F1', 'temperature': 57.221, 'vibration': 1.88, 'pressure': 6.8, 'humidity': 44.264, 'energy_consumption': 8.263}
+[OK] F2 -> {'timestamp': '2026-10-06T10:20:51+01:00', 'factory_id': 'F2', 'temperature': 93.784, 'vibration': 1.577, 'pressure': 6.273, 'humidity': 69.621, 'energy_consumption': 10.602}
+[OK] F3 -> {'timestamp': '2026-10-06T10:20:51+01:00', 'factory_id': 'F3', 'temperature': 70.402, 'vibration': 0.767, 'pressure': 3.752, 'humidity': 54.783, 'energy_consumption': 7.504}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:21:21+01:00', 'factory_id': 'F1', 'temperature': 81.609, 'vibration': 1.845, 'pressure': 5.366, 'humidity': 56.155, 'energy_consumption': 9.488}
+[OK] F2 -> {'timestamp': '2026-10-06T10:21:21+01:00', 'factory_id': 'F2', 'temperature': 84.89, 'vibration': 2.117, 'pressure': 6.901, 'humidity': 56.969, 'energy_consumption': 7.973}
+[OK] F3 -> {'timestamp': '2026-10-06T10:21:21+01:00', 'factory_id': 'F3', 'temperature': 80.762, 'vibration': 0.739, 'pressure': 4.022, 'humidity': 45.261, 'energy_consumption': 9.958}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:21:51+01:00', 'factory_id': 'F1', 'temperature': 65.979, 'vibration': 1.879, 'pressure': 4.431, 'humidity': 57.989, 'energy_consumption': 7.913}
+[OK] F2 -> {'timestamp': '2026-10-06T10:21:51+01:00', 'factory_id': 'F2', 'temperature': 66.299, 'vibration': 1.512, 'pressure': 4.828, 'humidity': 62.808, 'energy_consumption': 9.175}
+[OK] F3 -> {'timestamp': '2026-10-06T10:21:51+01:00', 'factory_id': 'F3', 'temperature': 62.388, 'vibration': 0.814, 'pressure': 2.801, 'humidity': 48.862, 'energy_consumption': 7.952}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:22:21+01:00', 'factory_id': 'F1', 'temperature': 66.716, 'vibration': 1.75, 'pressure': 5.983, 'humidity': 60.579, 'energy_consumption': 9.404}
+[OK] F2 -> {'timestamp': '2026-10-06T10:22:21+01:00', 'factory_id': 'F2', 'temperature': 87.658, 'vibration': 1.686, 'pressure': 5.598, 'humidity': 78.52, 'energy_consumption': 11.441}
+[OK] F3 -> {'timestamp': '2026-10-06T10:22:21+01:00', 'factory_id': 'F3', 'temperature': 71.707, 'vibration': 0.74, 'pressure': 4.355, 'humidity': 54.453, 'energy_consumption': 7.644}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:22:51+01:00', 'factory_id': 'F1', 'temperature': 63.758, 'vibration': 2.011, 'pressure': 4.622, 'humidity': 57.475, 'energy_consumption': 9.033}
+[OK] F2 -> {'timestamp': '2026-10-06T10:22:51+01:00', 'factory_id': 'F2', 'temperature': 89.767, 'vibration': 1.739, 'pressure': 5.329, 'humidity': 72.407, 'energy_consumption': 8.849}
+[OK] F3 -> {'timestamp': '2026-10-06T10:22:51+01:00', 'factory_id': 'F3', 'temperature': 66.269, 'vibration': 1.019, 'pressure': 3.87, 'humidity': 47.863, 'energy_consumption': 8.352}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:23:21+01:00', 'factory_id': 'F1', 'temperature': 65.38, 'vibration': 1.141, 'pressure': 4.153, 'humidity': 55.862, 'energy_consumption': 6.512}
+[OK] F2 -> {'timestamp': '2026-10-06T10:23:21+01:00', 'factory_id': 'F2', 'temperature': 81.454, 'vibration': 1.912, 'pressure': 5.436, 'humidity': 80.08, 'energy_consumption': 9.845}
+[OK] F3 -> {'timestamp': '2026-10-06T10:23:21+01:00', 'factory_id': 'F3', 'temperature': 69.951, 'vibration': 0.627, 'pressure': 4.826, 'humidity': 50.929, 'energy_consumption': 8.488}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:23:51+01:00', 'factory_id': 'F1', 'temperature': 47.26, 'vibration': 1.248, 'pressure': 4.5, 'humidity': 55.554, 'energy_consumption': 7.198}
+[OK] F2 -> {'timestamp': '2026-10-06T10:23:51+01:00', 'factory_id': 'F2', 'temperature': 89.438, 'vibration': 1.703, 'pressure': 6.643, 'humidity': 73.379, 'energy_consumption': 8.829}
+[OK] F3 -> {'timestamp': '2026-10-06T10:23:51+01:00', 'factory_id': 'F3', 'temperature': 77.652, 'vibration': 0.642, 'pressure': 3.912, 'humidity': 48.359, 'energy_consumption': 7.892}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:24:21+01:00', 'factory_id': 'F1', 'temperature': 68.933, 'vibration': 2.009, 'pressure': 5.653, 'humidity': 56.772, 'energy_consumption': 10.809}
+[OK] F2 -> {'timestamp': '2026-10-06T10:24:21+01:00', 'factory_id': 'F2', 'temperature': 78.946, 'vibration': 1.99, 'pressure': 5.75, 'humidity': 46.845, 'energy_consumption': 9.049}
+[OK] F3 -> {'timestamp': '2026-10-06T10:24:21+01:00', 'factory_id': 'F3', 'temperature': 69.605, 'vibration': 0.675, 'pressure': 3.445, 'humidity': 44.552, 'energy_consumption': 8.541}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:24:51+01:00', 'factory_id': 'F1', 'temperature': 51.229, 'vibration': 1.295, 'pressure': 5.125, 'humidity': 53.359, 'energy_consumption': 7.991}
+[OK] F2 -> {'timestamp': '2026-10-06T10:24:51+01:00', 'factory_id': 'F2', 'temperature': 84.609, 'vibration': 1.736, 'pressure': 5.646, 'humidity': 66.386, 'energy_consumption': 13.028}
+[OK] F3 -> {'timestamp': '2026-10-06T10:24:51+01:00', 'factory_id': 'F3', 'temperature': 75.594, 'vibration': 0.725, 'pressure': 4.48, 'humidity': 43.007, 'energy_consumption': 8.408}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:25:21+01:00', 'factory_id': 'F1', 'temperature': 58.787, 'vibration': 1.564, 'pressure': 5.587, 'humidity': 54.973, 'energy_consumption': 12.125}
+[OK] F2 -> {'timestamp': '2026-10-06T10:25:21+01:00', 'factory_id': 'F2', 'temperature': 79.149, 'vibration': 1.166, 'pressure': 4.283, 'humidity': 67.872, 'energy_consumption': 9.528}
+[OK] F3 -> {'timestamp': '2026-10-06T10:25:21+01:00', 'factory_id': 'F3', 'temperature': 70.459, 'vibration': 0.809, 'pressure': 3.506, 'humidity': 58.239, 'energy_consumption': 8.813}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:25:51+01:00', 'factory_id': 'F1', 'temperature': 55.958, 'vibration': 1.88, 'pressure': 5.757, 'humidity': 43.405, 'energy_consumption': 8.769}
+[OK] F2 -> {'timestamp': '2026-10-06T10:25:51+01:00', 'factory_id': 'F2', 'temperature': 90.082, 'vibration': 1.694, 'pressure': 6.45, 'humidity': 64.375, 'energy_consumption': 10.757}
+[OK] F3 -> {'timestamp': '2026-10-06T10:25:51+01:00', 'factory_id': 'F3', 'temperature': 66.869, 'vibration': 0.685, 'pressure': 4.332, 'humidity': 38.009, 'energy_consumption': 9.501}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:26:21+01:00', 'factory_id': 'F1', 'temperature': 62.086, 'vibration': 1.6, 'pressure': 5.348, 'humidity': 45.79, 'energy_consumption': 12.034}
+[OK] F2 -> {'timestamp': '2026-10-06T10:26:21+01:00', 'factory_id': 'F2', 'temperature': 86.196, 'vibration': 2.355, 'pressure': 4.762, 'humidity': 62.404, 'energy_consumption': 10.108}
+[OK] F3 -> {'timestamp': '2026-10-06T10:26:21+01:00', 'factory_id': 'F3', 'temperature': 62.184, 'vibration': 0.735, 'pressure': 4.749, 'humidity': 43.771, 'energy_consumption': 9.185}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:26:51+01:00', 'factory_id': 'F1', 'temperature': 60.41, 'vibration': 1.778, 'pressure': 5.037, 'humidity': 58.069, 'energy_consumption': 11.029}
+[OK] F2 -> {'timestamp': '2026-10-06T10:26:51+01:00', 'factory_id': 'F2', 'temperature': 76.488, 'vibration': 2.116, 'pressure': 6.426, 'humidity': 85.478, 'energy_consumption': 10.723}
+[OK] F3 -> {'timestamp': '2026-10-06T10:26:51+01:00', 'factory_id': 'F3', 'temperature': 76.155, 'vibration': 0.629, 'pressure': 3.381, 'humidity': 57.091, 'energy_consumption': 11.075}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:27:21+01:00', 'factory_id': 'F1', 'temperature': 61.966, 'vibration': 1.835, 'pressure': 5.376, 'humidity': 48.655, 'energy_consumption': 8.692}
+[OK] F2 -> {'timestamp': '2026-10-06T10:27:21+01:00', 'factory_id': 'F2', 'temperature': 84.943, 'vibration': 1.904, 'pressure': 5.893, 'humidity': 75.785, 'energy_consumption': 9.513}
+[OK] F3 -> {'timestamp': '2026-10-06T10:27:21+01:00', 'factory_id': 'F3', 'temperature': 59.972, 'vibration': 0.798, 'pressure': 3.726, 'humidity': 44.044, 'energy_consumption': 8.674}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:27:51+01:00', 'factory_id': 'F1', 'temperature': 73.123, 'vibration': 1.867, 'pressure': 4.031, 'humidity': 45.663, 'energy_consumption': 11.563}
+[OK] F2 -> {'timestamp': '2026-10-06T10:27:51+01:00', 'factory_id': 'F2', 'temperature': 78.25, 'vibration': 1.99, 'pressure': 5.18, 'humidity': 66.07, 'energy_consumption': 8.904}
+[OK] F3 -> {'timestamp': '2026-10-06T10:27:51+01:00', 'factory_id': 'F3', 'temperature': 63.513, 'vibration': 0.769, 'pressure': 3.767, 'humidity': 36.396, 'energy_consumption': 9.724}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:28:21+01:00', 'factory_id': 'F1', 'temperature': 73.406, 'vibration': 1.952, 'pressure': 4.55, 'humidity': 65.684, 'energy_consumption': 10.635}
+[OK] F2 -> {'timestamp': '2026-10-06T10:28:21+01:00', 'factory_id': 'F2', 'temperature': 82.386, 'vibration': 1.491, 'pressure': 5.747, 'humidity': 65.069, 'energy_consumption': 12.533}
+[OK] F3 -> {'timestamp': '2026-10-06T10:28:21+01:00', 'factory_id': 'F3', 'temperature': 73.285, 'vibration': 1.387, 'pressure': 5.421, 'humidity': 48.596, 'energy_consumption': 10.273}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:28:51+01:00', 'factory_id': 'F1', 'temperature': 63.4, 'vibration': 1.968, 'pressure': 5.829, 'humidity': 55.875, 'energy_consumption': 9.625}
+[OK] F2 -> {'timestamp': '2026-10-06T10:28:51+01:00', 'factory_id': 'F2', 'temperature': 81.378, 'vibration': 2.085, 'pressure': 5.719, 'humidity': 66.781, 'energy_consumption': 9.487}
+[OK] F3 -> {'timestamp': '2026-10-06T10:28:51+01:00', 'factory_id': 'F3', 'temperature': 60.548, 'vibration': 0.82, 'pressure': 3.686, 'humidity': 44.713, 'energy_consumption': 8.782}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:29:21+01:00', 'factory_id': 'F1', 'temperature': 54.444, 'vibration': 1.331, 'pressure': 4.853, 'humidity': 51.648, 'energy_consumption': 8.784}
+[OK] F2 -> {'timestamp': '2026-10-06T10:29:21+01:00', 'factory_id': 'F2', 'temperature': 92.842, 'vibration': 2.083, 'pressure': 5.931, 'humidity': 54.176, 'energy_consumption': 7.021}
+[OK] F3 -> {'timestamp': '2026-10-06T10:29:21+01:00', 'factory_id': 'F3', 'temperature': 65.189, 'vibration': 0.795, 'pressure': 3.576, 'humidity': 50.421, 'energy_consumption': 8.103}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:29:51+01:00', 'factory_id': 'F1', 'temperature': 52.954, 'vibration': 1.913, 'pressure': 5.289, 'humidity': 51.7, 'energy_consumption': 8.771}
+[OK] F2 -> {'timestamp': '2026-10-06T10:29:51+01:00', 'factory_id': 'F2', 'temperature': 74.198, 'vibration': 1.199, 'pressure': 4.77, 'humidity': 62.684, 'energy_consumption': 7.818}
+[OK] F3 -> {'timestamp': '2026-10-06T10:29:51+01:00', 'factory_id': 'F3', 'temperature': 74.438, 'vibration': 0.79, 'pressure': 4.492, 'humidity': 52.97, 'energy_consumption': 7.628}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:30:21+01:00', 'factory_id': 'F1', 'temperature': 56.335, 'vibration': 1.949, 'pressure': 5.571, 'humidity': 61.132, 'energy_consumption': 12.384}
+[OK] F2 -> {'timestamp': '2026-10-06T10:30:21+01:00', 'factory_id': 'F2', 'temperature': 88.12, 'vibration': 1.942, 'pressure': 6.963, 'humidity': 73.314, 'energy_consumption': 12.501}
+[OK] F3 -> {'timestamp': '2026-10-06T10:30:21+01:00', 'factory_id': 'F3', 'temperature': 72.751, 'vibration': 0.849, 'pressure': 3.557, 'humidity': 46.87, 'energy_consumption': 7.013}
+------------------------------------------
+Waiting 30 seconds...
+
+Sending data from all factories...
+[OK] F1 -> {'timestamp': '2026-10-06T10:30:51+01:00', 'factory_id': 'F1', 'temperature': 63.039, 'vibration': 1.824, 'pressure': 5.253, 'humidity': 44.915, 'energy_consumption': 9.057}
+[OK] F2 -> {'timestamp': '2026-10-06T10:30:51+01:00', 'factory_id': 'F2', 'temperature': 75.756, 'vibration': 1.984, 'pressure': 5.965, 'humidity': 78.217, 'energy_consumption': 9.76}
+[OK] F3 -> {'timestamp': '2026-10-06T10:30:51+01:00', 'factory_id': 'F3', 'temperature': 59.244, 'vibration': 0.817, 'pressure': 4.135, 'humidity': 32.316, 'energy_consumption': 6.913}

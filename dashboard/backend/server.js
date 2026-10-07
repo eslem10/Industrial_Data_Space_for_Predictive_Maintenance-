@@ -3,6 +3,7 @@ const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
 const mqtt = require("mqtt");
+const net = require("net");
 
 const app = express();
 
@@ -12,6 +13,11 @@ app.use(express.json());
 const PORT = 3001;
 const MQTT_BROKER_URL = process.env.MQTT_BROKER_URL || "mqtt://broker.emqx.io:1883";
 const MQTT_TOPIC = process.env.MQTT_TOPIC || "industrial/factory/+/sensors";
+const EDC_CONNECTORS = [
+    { id: "F1", port: Number(process.env.EDC_F1_PORT || 19193) },
+    { id: "F2", port: Number(process.env.EDC_F2_PORT || 21193) },
+    { id: "F3", port: Number(process.env.EDC_F3_PORT || 23193) }
+];
 
 const DATA_DIR = path.join(__dirname, "../../data");
 
@@ -29,6 +35,23 @@ const FIELDNAMES = [
 const liveLatest = new Map();
 const liveHistory = new Map();
 const streamClients = new Set();
+
+function checkPort(port, timeoutMs = 500) {
+    return new Promise((resolve) => {
+        const socket = net.createConnection({ host: "127.0.0.1", port });
+        let settled = false;
+        const finish = (available) => {
+            if (settled) return;
+            settled = true;
+            socket.destroy();
+            resolve(available);
+        };
+
+        socket.once("connect", () => finish(true));
+        socket.once("error", () => finish(false));
+        socket.setTimeout(timeoutMs, () => finish(false));
+    });
+}
 
 const mqttStatus = {
     broker: MQTT_BROKER_URL,
@@ -260,9 +283,13 @@ function startMqtt() {
 }
 
 app.get("/api/fl/metrics", (req, res) => {
-    const filePath = path.join(__dirname, "fl_metrics.json");
+    const metricsPaths = [
+        path.join(__dirname, "..", "..", "federated", "results", "metrics.json"),
+        path.join(__dirname, "fl_metrics.json"),
+    ];
+    const filePath = metricsPaths.find((candidate) => fs.existsSync(candidate));
 
-    if (!fs.existsSync(filePath)) {
+    if (!filePath) {
         return res.json({ rounds: [] });
     }
 
@@ -272,9 +299,9 @@ app.get("/api/fl/metrics", (req, res) => {
             return res.json({ rounds: [] });
         }
         const data = JSON.parse(content);
-        res.json(data);
+        res.json(Array.isArray(data) ? { rounds: data } : data);
     } catch (err) {
-        console.error("Error reading fl_metrics.json:", err);
+        console.error(`Error reading federated metrics from ${filePath}:`, err);
         res.json({ rounds: [] });
     }
 });
@@ -317,6 +344,22 @@ app.get("/api/health", (req, res) => {
 
 app.get("/api/mqtt/status", (req, res) => {
     res.json(mqttStatus);
+});
+
+app.get("/api/edc/status", async (req, res) => {
+    const connectors = await Promise.all(
+        EDC_CONNECTORS.map(async ({ id, port }) => ({
+            id,
+            port,
+            available: await checkPort(port)
+        }))
+    );
+
+    res.json({
+        available: connectors.filter((connector) => connector.available).length,
+        total: connectors.length,
+        connectors
+    });
 });
 
 app.get("/api/stream", (req, res) => {

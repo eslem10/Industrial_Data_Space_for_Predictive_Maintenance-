@@ -1,15 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { EDC_CONNECTOR_URLS } from "../config";
 
-function EDCStatus() {
+function EDCStatus({ apiBaseUrl }) {
     const [selectedConnector, setSelectedConnector] = useState(null);
+    const [edcStatus, setEdcStatus] = useState(null);
 
     const connectors = [
         {
+            factoryId: "F1",
             id: "EDC-F1-PROD",
             factory: "Factory 1 (Cold Env)",
             status: "connected",
-            endpoint: "https://edc-f1.dataspace.industrial:8181/api/v1/data",
-            daps: "Verified (x509)",
+            endpoint: EDC_CONNECTOR_URLS.F1,
+            daps: "Local runtime",
             contract: "ODRL 2.0 Maintenance Agreement",
             transferred: "14.2 MB",
             throughput: "42.8 KB/s",
@@ -17,11 +20,12 @@ function EDCStatus() {
             policy: "Sovereign Usage - Read Only"
         },
         {
+            factoryId: "F2",
             id: "EDC-F2-PROD",
             factory: "Factory 2 (Hot Env)",
             status: "connected",
-            endpoint: "https://edc-f2.dataspace.industrial:8181/api/v1/data",
-            daps: "Verified (x509)",
+            endpoint: EDC_CONNECTOR_URLS.F2,
+            daps: "Local runtime",
             contract: "ODRL 2.0 Maintenance Agreement",
             transferred: "18.6 MB",
             throughput: "48.1 KB/s",
@@ -29,11 +33,12 @@ function EDCStatus() {
             policy: "Sovereign Usage - Read Only"
         },
         {
+            factoryId: "F3",
             id: "EDC-F3-PROD",
             factory: "Factory 3 (Legacy Machinery)",
             status: "connected",
-            endpoint: "https://edc-f3.dataspace.industrial:8181/api/v1/data",
-            daps: "Verified (x509)",
+            endpoint: EDC_CONNECTOR_URLS.F3,
+            daps: "Local runtime",
             contract: "ODRL 2.0 Maintenance Agreement",
             transferred: "22.1 MB",
             throughput: "56.4 KB/s",
@@ -41,6 +46,32 @@ function EDCStatus() {
             policy: "Sovereign Usage - Read Only"
         }
     ];
+
+    useEffect(() => {
+        let active = true;
+
+        const refreshStatus = async () => {
+            try {
+                const response = await fetch(`${apiBaseUrl}/api/edc/status`);
+                if (!response.ok) throw new Error(`EDC status request failed: ${response.status}`);
+                const data = await response.json();
+                if (active) setEdcStatus(data);
+            } catch (error) {
+                console.error("Error fetching EDC status:", error);
+                if (active) setEdcStatus({ available: 0, total: connectors.length, connectors: [] });
+            }
+        };
+
+        refreshStatus();
+        const timer = setInterval(refreshStatus, 5000);
+        return () => {
+            active = false;
+            clearInterval(timer);
+        };
+    }, [apiBaseUrl]);
+
+    const isAvailable = (factoryId) =>
+        edcStatus?.connectors?.find((connector) => connector.id === factoryId)?.available === true;
 
     return (
         <section className="dashboard-section">
@@ -60,7 +91,9 @@ function EDCStatus() {
                     <span className="shield-icon">🛡️</span>
                     <div>
                         <span className="edc-status-label">DAPS Security Identity</span>
-                        <strong className="edc-status-val">3/3 Connectors Mutual TLS Verified</strong>
+                        <strong className="edc-status-val">
+                            {edcStatus ? `${edcStatus.available}/${edcStatus.total}` : "Checking"} Local Connectors Available
+                        </strong>
                     </div>
                 </div>
             </div>
@@ -82,9 +115,9 @@ function EDCStatus() {
                                 <p>{c.factory}</p>
                             </div>
 
-                            <span className="edc-pill-connected">
+                            <span className={`edc-pill-connected ${isAvailable(c.factoryId) ? "" : "edc-pill-disconnected"}`}>
                                 <span className="beacon-dot"></span>
-                                Online
+                                {edcStatus ? (isAvailable(c.factoryId) ? "Online" : "Offline") : "Checking"}
                             </span>
                         </div>
 

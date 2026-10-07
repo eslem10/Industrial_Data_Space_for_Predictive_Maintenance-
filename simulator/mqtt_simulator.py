@@ -50,7 +50,7 @@ try:
                 json.dumps(data)
             )
 
-            print(f"✓ {factory} → {data}")
+            print(f"[OK] {factory} -> {data}")
 
         # Next cycle
         timestamp_index += 1

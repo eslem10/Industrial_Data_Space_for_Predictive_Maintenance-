@@ -1,7 +1,13 @@
 **/build/
 **/.gradle/
 **/__pycache__/
-*.py[cod]# EDC runtime artifacts
+*.py[cod]
+
+# Local development
+.venv*/
+.runtime-logs/
+
+# EDC runtime artifacts
 edc-connectors/runtime-logs/
 edc-connectors/traces/
 edc-connectors/transfers/
