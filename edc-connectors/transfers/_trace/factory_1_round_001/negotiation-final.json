@@ -1,0 +1,24 @@
+{
+  "@type": "edc:ContractNegotiation",
+  "@id": "80aa81dd-384b-4182-99eb-acd4f33ce79c",
+  "type": "CONSUMER",
+  "protocol": "dataspace-protocol-http:2025-1",
+  "profile": "dataspace-protocol-http:2025-1",
+  "state": "FINALIZED",
+  "counterPartyId": "factory-1",
+  "counterPartyAddress": "http://localhost:19194/protocol/2025-1",
+  "callbackAddresses": [],
+  "createdAt": 1790159354004,
+  "assetId": "weights-factory-1-round-1",
+  "contractAgreementId": "f3d17695-7102-4e94-80c4-727eaf3a27ff",
+  "correlationId": "0592a610-889b-463a-bcac-8a7253bb12f3",
+  "@context": [
+    "https://w3id.org/dspace/2025/1/context.jsonld",
+    "https://w3id.org/edc/dspace/v0.0.1",
+    {
+      "@vocab": "https://w3id.org/edc/v0.0.1/ns/",
+      "edc": "https://w3id.org/edc/v0.0.1/ns/",
+      "odrl": "http://www.w3.org/ns/odrl/2/"
+    }
+  ]
+}

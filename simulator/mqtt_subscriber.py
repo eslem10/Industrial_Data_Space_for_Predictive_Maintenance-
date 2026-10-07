@@ -1,30 +1,20 @@
 import json
 import csv
 import os
+from datetime import datetime
 import paho.mqtt.client as mqtt
-
-
-# ==========================================
-# MQTT CONFIGURATION
-# ==========================================
 
 BROKER = "broker.emqx.io"
 PORT = 1883
-
 TOPIC = "industrial/factory/+/sensors"
 
-# Project root
-DATA_DIR = "../data"
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_DIR = os.path.join(BASE_DIR, "data")
 
-
-# ==========================================
-# Save data to CSV
-# ==========================================
 
 def save_to_csv(data):
 
     factory_id = data["factory_id"]
-
     factory_number = factory_id.replace("F", "")
 
     factory_dir = os.path.join(
@@ -39,8 +29,6 @@ def save_to_csv(data):
         "sensor_data.csv"
     )
 
-    file_exists = os.path.exists(csv_file) and os.path.getsize(csv_file) > 0
-
     fieldnames = [
         "timestamp",
         "factory_id",
@@ -52,18 +40,13 @@ def save_to_csv(data):
         "state"
     ]
 
-    from datetime import datetime
-
     data["timestamp"] = datetime.now().strftime(
         "%Y-%m-%d %H:%M:%S"
     )
 
-    with open(
-        csv_file,
-        "a",
-        newline="",
-        encoding="utf-8"
-    ) as file:
+    file_exists = os.path.exists(csv_file)
+
+    with open(csv_file, "a", newline="", encoding="utf-8") as file:
 
         writer = csv.DictWriter(
             file,
@@ -75,50 +58,43 @@ def save_to_csv(data):
 
         writer.writerow(data)
 
-    print(
-        f"✓ {factory_id} data saved → {csv_file}"
-    )
+    print(f"✓ SAVED → {csv_file}")
 
-
-# ==========================================
-# MQTT callbacks
-# ==========================================
 
 def on_connect(client, userdata, flags, reason_code, properties):
 
     print("Connected to MQTT broker!")
+    print("Connection code:", reason_code)
 
-    client.subscribe(TOPIC)
+    result = client.subscribe(TOPIC)
 
-    print(f"Subscribed to: {TOPIC}")
+    print("Subscribe result:", result)
+    print("Subscribed to:", TOPIC)
     print("Waiting for sensor data...\n")
 
 
 def on_message(client, userdata, msg):
 
+    print("\n==============================")
+    print("📩 MESSAGE RECEIVED")
+    print("Topic:", msg.topic)
+    print("Payload:", msg.payload.decode())
+    print("==============================")
+
     try:
 
-        data = json.loads(
-            msg.payload.decode()
-        )
-
-        print(f"Received from {msg.topic}")
-        print(data)
+        data = json.loads(msg.payload.decode())
 
         save_to_csv(data)
 
     except Exception as e:
 
-        print(f"Error: {e}")
+        print("❌ Error:", e)
 
-
-# ==========================================
-# MQTT CLIENT
-# ==========================================
 
 client = mqtt.Client(
     mqtt.CallbackAPIVersion.VERSION2,
-    client_id="industrial-data-collector"
+    client_id="industrial-data-collector-test"
 )
 
 client.on_connect = on_connect
@@ -126,10 +102,6 @@ client.on_message = on_message
 
 print("Connecting to MQTT broker...")
 
-client.connect(
-    BROKER,
-    PORT,
-    60
-)
+client.connect(BROKER, PORT, 60)
 
 client.loop_forever()

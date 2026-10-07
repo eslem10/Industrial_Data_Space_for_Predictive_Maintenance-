@@ -1,0 +1,44 @@
+{
+  "rounds": [
+    {
+      "round": 1,
+      "loss": 0.62,
+      "accuracy": 0.74,
+      "precision": 0.71,
+      "recall": 0.69,
+      "f1": 0.70
+    },
+    {
+      "round": 2,
+      "loss": 0.48,
+      "accuracy": 0.81,
+      "precision": 0.79,
+      "recall": 0.78,
+      "f1": 0.78
+    },
+    {
+      "round": 3,
+      "loss": 0.36,
+      "accuracy": 0.87,
+      "precision": 0.85,
+      "recall": 0.84,
+      "f1": 0.84
+    },
+    {
+      "round": 4,
+      "loss": 0.27,
+      "accuracy": 0.91,
+      "precision": 0.89,
+      "recall": 0.88,
+      "f1": 0.88
+    },
+    {
+      "round": 5,
+      "loss": 0.19,
+      "accuracy": 0.95,
+      "precision": 0.93,
+      "recall": 0.92,
+      "f1": 0.93
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+**/build/
+**/.gradle/
+**/__pycache__/
+*.py[cod]
+
+# Local development
+.venv*/
+.runtime-logs/
+
+# EDC runtime artifacts
+edc-connectors/runtime-logs/
+edc-connectors/traces/
+edc-connectors/transfers/
+edc-connectors/edc-runtime/**/bin/
+edc-connectors/weights/*/round_*.json
+
+# Node
+node_modules/
