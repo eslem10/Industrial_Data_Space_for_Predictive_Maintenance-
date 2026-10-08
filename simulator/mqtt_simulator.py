@@ -1,20 +1,21 @@
 import json
+import os
 import time
 import paho.mqtt.client as mqtt
 
 from stream_simulator import generate_measurement
 
-BROKER = "broker.emqx.io"
-PORT = 1883
+BROKER = os.environ.get("MQTT_BROKER_HOST", "broker.emqx.io")
+PORT = int(os.environ.get("MQTT_BROKER_PORT", "1883"))
 
 FACTORIES = ["F1", "F2", "F3"]
 
-INTERVAL = 30
+INTERVAL = float(os.environ.get("MQTT_INTERVAL", "30"))
 
 
 client = mqtt.Client(
     mqtt.CallbackAPIVersion.VERSION2,
-    client_id="industrial-iot-simulator"
+    client_id=os.environ.get("MQTT_CLIENT_ID", "industrial-iot-simulator")
 )
 
 print("Connecting to MQTT broker...")
@@ -28,6 +29,8 @@ print("------------------------------------------")
 
 timestamp_index = 0
 
+if INTERVAL <= 0:
+    raise ValueError("MQTT_INTERVAL must be positive")
 
 try:
     while True:

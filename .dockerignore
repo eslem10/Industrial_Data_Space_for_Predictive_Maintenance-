@@ -1,0 +1,12 @@
+.git
+.venv*/
+**/node_modules/
+**/.gradle/
+**/build/
+data/
+runtime-logs/
+edc-connectors/runtime-logs/
+edc-connectors/transfers/
+edc-connectors/weights/
+federated/global_model.keras
+federated/results/metrics.json

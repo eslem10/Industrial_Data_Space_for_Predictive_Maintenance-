@@ -1,0 +1,712 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: industrial-data-space
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: project-data
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 3Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: federated-artifacts
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mosquitto
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mosquitto
+  template:
+    metadata:
+      labels:
+        app: mosquitto
+    spec:
+      containers:
+        - name: mosquitto
+          image: eclipse-mosquitto:2
+          args: ["mosquitto", "-c", "/mosquitto/config/mosquitto.conf"]
+          ports:
+            - name: mqtt
+              containerPort: 1883
+          readinessProbe:
+            tcpSocket:
+              port: mqtt
+            periodSeconds: 5
+          volumeMounts:
+            - name: config
+              mountPath: /mosquitto/config/mosquitto.conf
+              subPath: mosquitto.conf
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: mosquitto-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mosquitto
+spec:
+  selector:
+    app: mosquitto
+  ports:
+    - name: mqtt
+      port: 1883
+      targetPort: mqtt
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: data-init
+  labels:
+    app.kubernetes.io/part-of: industrial-data-space
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: generate-data
+          image: industrial-python:local
+          imagePullPolicy: IfNotPresent
+          command: ["python", "simulator/generate_data.py"]
+          volumeMounts:
+            - name: project-data
+              mountPath: /app/data
+      volumes:
+        - name: project-data
+          persistentVolumeClaim:
+            claimName: project-data
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mqtt-simulator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mqtt-simulator
+  template:
+    metadata:
+      labels:
+        app: mqtt-simulator
+    spec:
+      containers:
+        - name: mqtt-simulator
+          image: industrial-python:local
+          imagePullPolicy: IfNotPresent
+          command: ["python", "simulator/mqtt_simulator.py"]
+          env:
+            - name: MQTT_BROKER_HOST
+              value: mosquitto
+            - name: MQTT_BROKER_PORT
+              value: "1883"
+            - name: MQTT_CLIENT_ID
+              value: industrial-iot-simulator
+            - name: MQTT_INTERVAL
+              value: "5"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashboard-api
+  template:
+    metadata:
+      labels:
+        app: dashboard-api
+    spec:
+      containers:
+        - name: dashboard-api
+          image: industrial-dashboard-api:local
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3001
+          env:
+            - name: DATA_DIR
+              value: /app/data
+            - name: METRICS_PATH
+              value: /artifacts/metrics.json
+            - name: MQTT_BROKER_URL
+              value: mqtt://mosquitto:1883
+            - name: MQTT_TOPIC
+              value: industrial/factory/+/sensors
+            - name: EDC_F1_HOST
+              value: edc-provider-1
+            - name: EDC_F1_PORT
+              value: "8181"
+            - name: EDC_F2_HOST
+              value: edc-provider-2
+            - name: EDC_F2_PORT
+              value: "8181"
+            - name: EDC_F3_HOST
+              value: edc-provider-3
+            - name: EDC_F3_PORT
+              value: "8181"
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          volumeMounts:
+            - name: project-data
+              mountPath: /app/data
+            - name: federated-artifacts
+              mountPath: /artifacts
+              readOnly: true
+      volumes:
+        - name: project-data
+          persistentVolumeClaim:
+            claimName: project-data
+        - name: federated-artifacts
+          persistentVolumeClaim:
+            claimName: federated-artifacts
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard-api
+spec:
+  selector:
+    app: dashboard-api
+  ports:
+    - name: http
+      port: 3001
+      targetPort: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashboard-frontend
+  template:
+    metadata:
+      labels:
+        app: dashboard-frontend
+    spec:
+      containers:
+        - name: dashboard-frontend
+          image: industrial-dashboard-frontend:local
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard-frontend
+spec:
+  type: NodePort
+  selector:
+    app: dashboard-frontend
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      nodePort: 30080
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: federated-server
+  labels:
+    app.kubernetes.io/part-of: industrial-data-space
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: flower-server
+          image: industrial-python:local
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "federated.server"]
+          ports:
+            - name: flower
+              containerPort: 8080
+          env:
+            - name: SERVER_ADDRESS
+              value: 0.0.0.0:8080
+            - name: NUM_CLIENTS
+              value: "3"
+            - name: NUM_ROUNDS
+              value: "5"
+            - name: METRICS_PATH
+              value: /artifacts/metrics.json
+            - name: MODEL_PATH
+              value: /artifacts/global_model.keras
+            - name: EDC_PUBLISH_ENABLED
+              value: "true"
+            - name: EDC_SOURCE_DIR
+              value: /artifacts/weights
+            - name: EDC_SOURCE_BASE_URL
+              value: http://weights:8000
+            - name: EDC_TRANSFER_DIR
+              value: /artifacts/transfers
+            - name: EDC_TRACE_DIR
+              value: /artifacts/transfers/_trace
+          volumeMounts:
+            - name: federated-artifacts
+              mountPath: /artifacts
+      volumes:
+        - name: federated-artifacts
+          persistentVolumeClaim:
+            claimName: federated-artifacts
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: federated-server
+spec:
+  selector:
+    app: federated-server
+  ports:
+    - name: flower
+      port: 8080
+      targetPort: flower
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: federated-client-f1
+  labels:
+    app.kubernetes.io/part-of: industrial-data-space
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: wait-for-data
+          image: industrial-python:local
+          imagePullPolicy: IfNotPresent
+          command: ["sh", "-c", "until [ -s /app/data/factory_1/sensor_data.csv ]; do sleep 2; done"]
+          volumeMounts:
+            - name: project-data
+              mountPath: /app/data/factory_1
+              subPath: factory_1
+      containers:
+        - name: flower-client
+          image: industrial-python:local
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "federated.client", "factory_1"]
+          env:
+            - name: SERVER_ADDRESS
+              value: federated-server:8080
+            - name: DATA_DIR
+              value: /app/data
+            - name: EDC_WEIGHTS_DIR
+              value: /artifacts/weights
+          volumeMounts:
+            - name: project-data
+              mountPath: /app/data/factory_1
+              subPath: factory_1
+              readOnly: true
+            - name: federated-artifacts
+              mountPath: /artifacts
+      volumes:
+        - name: project-data
+          persistentVolumeClaim:
+            claimName: project-data
+        - name: federated-artifacts
+          persistentVolumeClaim:
+            claimName: federated-artifacts
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: federated-client-f2
+  labels:
+    app.kubernetes.io/part-of: industrial-data-space
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: wait-for-data
+          image: industrial-python:local
+          imagePullPolicy: IfNotPresent
+          command: ["sh", "-c", "until [ -s /app/data/factory_2/sensor_data.csv ]; do sleep 2; done"]
+          volumeMounts:
+            - name: project-data
+              mountPath: /app/data/factory_2
+              subPath: factory_2
+      containers:
+        - name: flower-client
+          image: industrial-python:local
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "federated.client", "factory_2"]
+          env:
+            - name: SERVER_ADDRESS
+              value: federated-server:8080
+            - name: DATA_DIR
+              value: /app/data
+            - name: EDC_WEIGHTS_DIR
+              value: /artifacts/weights
+          volumeMounts:
+            - name: project-data
+              mountPath: /app/data/factory_2
+              subPath: factory_2
+              readOnly: true
+            - name: federated-artifacts
+              mountPath: /artifacts
+      volumes:
+        - name: project-data
+          persistentVolumeClaim:
+            claimName: project-data
+        - name: federated-artifacts
+          persistentVolumeClaim:
+            claimName: federated-artifacts
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: federated-client-f3
+  labels:
+    app.kubernetes.io/part-of: industrial-data-space
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: wait-for-data
+          image: industrial-python:local
+          imagePullPolicy: IfNotPresent
+          command: ["sh", "-c", "until [ -s /app/data/factory_3/sensor_data.csv ]; do sleep 2; done"]
+          volumeMounts:
+            - name: project-data
+              mountPath: /app/data/factory_3
+              subPath: factory_3
+      containers:
+        - name: flower-client
+          image: industrial-python:local
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "federated.client", "factory_3"]
+          env:
+            - name: SERVER_ADDRESS
+              value: federated-server:8080
+            - name: DATA_DIR
+              value: /app/data
+            - name: EDC_WEIGHTS_DIR
+              value: /artifacts/weights
+          volumeMounts:
+            - name: project-data
+              mountPath: /app/data/factory_3
+              subPath: factory_3
+              readOnly: true
+            - name: federated-artifacts
+              mountPath: /artifacts
+      volumes:
+        - name: project-data
+          persistentVolumeClaim:
+            claimName: project-data
+        - name: federated-artifacts
+          persistentVolumeClaim:
+            claimName: federated-artifacts
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weights
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: weights
+  template:
+    metadata:
+      labels:
+        app: weights
+    spec:
+      initContainers:
+        - name: prepare-directory
+          image: python:3.12-slim
+          command: ["sh", "-c", "mkdir -p /artifacts/weights/factory_1 /artifacts/weights/factory_2 /artifacts/weights/factory_3"]
+          volumeMounts:
+            - name: federated-artifacts
+              mountPath: /artifacts
+      containers:
+        - name: weights
+          image: python:3.12-slim
+          command: ["python", "-m", "http.server", "8000", "--directory", "/artifacts/weights"]
+          ports:
+            - name: http
+              containerPort: 8000
+          volumeMounts:
+            - name: federated-artifacts
+              mountPath: /artifacts
+              readOnly: true
+      volumes:
+        - name: federated-artifacts
+          persistentVolumeClaim:
+            claimName: federated-artifacts
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: weights
+spec:
+  selector:
+    app: weights
+  ports:
+    - name: http
+      port: 8000
+      targetPort: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edc-provider-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: edc-provider-1
+  template:
+    metadata:
+      labels:
+        app: edc-provider-1
+    spec:
+      containers:
+        - name: connector
+          image: industrial-edc-provider:local
+          imagePullPolicy: IfNotPresent
+          args: ["-Dedc.fs.config=/config/connector.properties", "-jar", "/app/connector.jar"]
+          ports:
+            - name: management
+              containerPort: 8181
+            - name: dsp
+              containerPort: 8184
+            - name: public
+              containerPort: 8185
+          readinessProbe:
+            tcpSocket:
+              port: management
+            periodSeconds: 10
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: edc-provider-f1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: edc-provider-1
+spec:
+  selector:
+    app: edc-provider-1
+  ports:
+    - name: management
+      port: 8181
+      targetPort: management
+    - name: dsp
+      port: 8184
+      targetPort: dsp
+    - name: public
+      port: 8185
+      targetPort: public
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edc-provider-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: edc-provider-2
+  template:
+    metadata:
+      labels:
+        app: edc-provider-2
+    spec:
+      containers:
+        - name: connector
+          image: industrial-edc-provider:local
+          imagePullPolicy: IfNotPresent
+          args: ["-Dedc.fs.config=/config/connector.properties", "-jar", "/app/connector.jar"]
+          ports:
+            - name: management
+              containerPort: 8181
+            - name: dsp
+              containerPort: 8184
+            - name: public
+              containerPort: 8185
+          readinessProbe:
+            tcpSocket:
+              port: management
+            periodSeconds: 10
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: edc-provider-f2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: edc-provider-2
+spec:
+  selector:
+    app: edc-provider-2
+  ports:
+    - name: management
+      port: 8181
+      targetPort: management
+    - name: dsp
+      port: 8184
+      targetPort: dsp
+    - name: public
+      port: 8185
+      targetPort: public
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edc-provider-3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: edc-provider-3
+  template:
+    metadata:
+      labels:
+        app: edc-provider-3
+    spec:
+      containers:
+        - name: connector
+          image: industrial-edc-provider:local
+          imagePullPolicy: IfNotPresent
+          args: ["-Dedc.fs.config=/config/connector.properties", "-jar", "/app/connector.jar"]
+          ports:
+            - name: management
+              containerPort: 8181
+            - name: dsp
+              containerPort: 8184
+            - name: public
+              containerPort: 8185
+          readinessProbe:
+            tcpSocket:
+              port: management
+            periodSeconds: 10
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: edc-provider-f3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: edc-provider-3
+spec:
+  selector:
+    app: edc-provider-3
+  ports:
+    - name: management
+      port: 8181
+      targetPort: management
+    - name: dsp
+      port: 8184
+      targetPort: dsp
+    - name: public
+      port: 8185
+      targetPort: public
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edc-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: edc-consumer
+  template:
+    metadata:
+      labels:
+        app: edc-consumer
+    spec:
+      containers:
+        - name: connector
+          image: industrial-edc-consumer:local
+          imagePullPolicy: IfNotPresent
+          args: ["-Dedc.fs.config=/config/connector.properties", "-jar", "/app/connector.jar"]
+          ports:
+            - name: management
+              containerPort: 8281
+            - name: dsp
+              containerPort: 8284
+          readinessProbe:
+            tcpSocket:
+              port: management
+            periodSeconds: 10
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: edc-consumer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: edc-consumer
+spec:
+  selector:
+    app: edc-consumer
+  ports:
+    - name: management
+      port: 8281
+      targetPort: management
+    - name: dsp
+      port: 8284
+      targetPort: dsp

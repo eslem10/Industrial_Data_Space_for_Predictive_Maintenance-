@@ -15,7 +15,12 @@ except ImportError:
     from preprocessing import FEATURES, LABEL, scale_features
 
 
-EDC_WEIGHTS_DIR = Path(__file__).resolve().parent.parent / "edc-connectors" / "weights"
+EDC_WEIGHTS_DIR = Path(
+    os.environ.get(
+        "EDC_WEIGHTS_DIR",
+        Path(__file__).resolve().parent.parent / "edc-connectors" / "weights",
+    )
+).expanduser()
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = Path(os.environ.get("DATA_DIR", PROJECT_ROOT / "data")).expanduser()
 if not DATA_DIR.is_absolute():

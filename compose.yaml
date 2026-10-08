@@ -1,0 +1,248 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    command: ["mosquitto", "-c", "/mosquitto/config/mosquitto.conf"]
+    ports:
+      - "127.0.0.1:1884:1883"
+    volumes:
+      - ./k8s/config/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-h", "127.0.0.1", "-t", "$$SYS/broker/version", "-C", "1", "-W", "3"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  data-init:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command:
+      - sh
+      - -c
+      - if [ ! -s /app/data/factory_1/sensor_data.csv ] || [ ! -s /app/data/factory_2/sensor_data.csv ] || [ ! -s /app/data/factory_3/sensor_data.csv ]; then python simulator/generate_data.py; else echo "Existing factory CSVs found; keeping them."; fi
+    volumes:
+      - ./data:/app/data
+    restart: "no"
+
+  federated-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "federated.server"]
+    environment:
+      SERVER_ADDRESS: 0.0.0.0:8080
+      NUM_ROUNDS: ${NUM_ROUNDS:-5}
+      NUM_CLIENTS: "3"
+      METRICS_PATH: /artifacts/metrics.json
+      MODEL_PATH: /artifacts/global_model.keras
+      EDC_PUBLISH_ENABLED: "true"
+      EDC_SOURCE_DIR: /weights
+      EDC_SOURCE_BASE_URL: http://weights:8000
+      EDC_TRANSFER_DIR: /transfers
+      EDC_TRACE_DIR: /transfers/_trace
+    ports:
+      - "127.0.0.1:8081:8080"
+    volumes:
+      - federated-artifacts:/artifacts
+      - ./edc-connectors/weights:/weights:ro
+      - ./edc-connectors/transfers:/transfers
+    depends_on:
+      data-init:
+        condition: service_completed_successfully
+      weights:
+        condition: service_started
+      edc-provider-1:
+        condition: service_started
+      edc-provider-2:
+        condition: service_started
+      edc-provider-3:
+        condition: service_started
+      edc-consumer:
+        condition: service_started
+    restart: "no"
+
+  federated-client-f1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "federated.client", "factory_1"]
+    environment:
+      SERVER_ADDRESS: federated-server:8080
+      DATA_DIR: /app/data
+      EDC_WEIGHTS_DIR: /weights
+    volumes:
+      - ./data:/app/data:ro
+      - ./edc-connectors/weights:/weights
+    depends_on:
+      data-init:
+        condition: service_completed_successfully
+      federated-server:
+        condition: service_started
+    restart: "no"
+
+  federated-client-f2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "federated.client", "factory_2"]
+    environment:
+      SERVER_ADDRESS: federated-server:8080
+      DATA_DIR: /app/data
+      EDC_WEIGHTS_DIR: /weights
+    volumes:
+      - ./data:/app/data:ro
+      - ./edc-connectors/weights:/weights
+    depends_on:
+      data-init:
+        condition: service_completed_successfully
+      federated-server:
+        condition: service_started
+    restart: "no"
+
+  federated-client-f3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "federated.client", "factory_3"]
+    environment:
+      SERVER_ADDRESS: federated-server:8080
+      DATA_DIR: /app/data
+      EDC_WEIGHTS_DIR: /weights
+    volumes:
+      - ./data:/app/data:ro
+      - ./edc-connectors/weights:/weights
+    depends_on:
+      data-init:
+        condition: service_completed_successfully
+      federated-server:
+        condition: service_started
+    restart: "no"
+
+  mqtt-simulator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "simulator/mqtt_simulator.py"]
+    environment:
+      MQTT_BROKER_HOST: mosquitto
+      MQTT_BROKER_PORT: "1883"
+      MQTT_CLIENT_ID: industrial-iot-simulator
+      MQTT_INTERVAL: "5"
+    depends_on:
+      mosquitto:
+        condition: service_healthy
+    restart: unless-stopped
+
+  dashboard-api:
+    build:
+      context: dashboard/backend
+    environment:
+      PORT: "3001"
+      DATA_DIR: /app/data
+      METRICS_PATH: /artifacts/metrics.json
+      MQTT_BROKER_URL: mqtt://mosquitto:1883
+      MQTT_TOPIC: industrial/factory/+/sensors
+      EDC_F1_HOST: edc-provider-1
+      EDC_F1_PORT: "8181"
+      EDC_F2_HOST: edc-provider-2
+      EDC_F2_PORT: "8181"
+      EDC_F3_HOST: edc-provider-3
+      EDC_F3_PORT: "8181"
+    ports:
+      - "127.0.0.1:3001:3001"
+    volumes:
+      - ./data:/app/data
+      - federated-artifacts:/artifacts:ro
+    depends_on:
+      mosquitto:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3001/api/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  dashboard-frontend:
+    build:
+      context: dashboard/frontend
+      args:
+        VITE_API_BASE_URL: /api
+    ports:
+      - "8088:80"
+    depends_on:
+      dashboard-api:
+        condition: service_healthy
+    restart: unless-stopped
+
+  weights:
+    image: python:3.12-slim
+    command: ["python", "-m", "http.server", "8000", "--directory", "/weights"]
+    volumes:
+      - ./edc-connectors/weights:/weights:ro
+    expose:
+      - "8000"
+    restart: unless-stopped
+
+  edc-provider-1:
+    build:
+      context: .
+      dockerfile: edc-connectors/Dockerfile
+      args:
+        CONNECTOR_MODULE: transfer/transfer-03-consumer-pull/provider-proxy-data-plane
+    command: ["-Dedc.fs.config=/config/connector.properties", "-jar", "/app/connector.jar"]
+    volumes:
+      - ./k8s/config/factory-1.properties:/config/connector.properties:ro
+    ports:
+      - "127.0.0.1:19193:8181"
+      - "127.0.0.1:19194:8184"
+      - "127.0.0.1:19291:8185"
+    restart: unless-stopped
+
+  edc-provider-2:
+    build:
+      context: .
+      dockerfile: edc-connectors/Dockerfile
+      args:
+        CONNECTOR_MODULE: transfer/transfer-03-consumer-pull/provider-proxy-data-plane
+    command: ["-Dedc.fs.config=/config/connector.properties", "-jar", "/app/connector.jar"]
+    volumes:
+      - ./k8s/config/factory-2.properties:/config/connector.properties:ro
+    ports:
+      - "127.0.0.1:21193:8181"
+      - "127.0.0.1:21194:8184"
+      - "127.0.0.1:21291:8185"
+    restart: unless-stopped
+
+  edc-provider-3:
+    build:
+      context: .
+      dockerfile: edc-connectors/Dockerfile
+      args:
+        CONNECTOR_MODULE: transfer/transfer-03-consumer-pull/provider-proxy-data-plane
+    command: ["-Dedc.fs.config=/config/connector.properties", "-jar", "/app/connector.jar"]
+    volumes:
+      - ./k8s/config/factory-3.properties:/config/connector.properties:ro
+    ports:
+      - "127.0.0.1:23193:8181"
+      - "127.0.0.1:23194:8184"
+      - "127.0.0.1:23291:8185"
+    restart: unless-stopped
+
+  edc-consumer:
+    build:
+      context: .
+      dockerfile: edc-connectors/Dockerfile
+      args:
+        CONNECTOR_MODULE: transfer/transfer-00-prerequisites/connector
+    command: ["-Dedc.fs.config=/config/connector.properties", "-jar", "/app/connector.jar"]
+    volumes:
+      - ./k8s/config/consumer.properties:/config/connector.properties:ro
+    ports:
+      - "127.0.0.1:29193:8281"
+      - "127.0.0.1:29194:8284"
+    restart: unless-stopped
+
+volumes:
+  federated-artifacts:

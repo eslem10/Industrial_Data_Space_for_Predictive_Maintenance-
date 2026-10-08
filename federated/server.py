@@ -2,6 +2,8 @@
 import os
 import json
 from pathlib import Path
+import subprocess
+import sys
 
 import flwr as fl
 import tensorflow as tf
@@ -49,7 +51,33 @@ global_model = create_model()
 SERVER_ADDRESS = os.environ.get("SERVER_ADDRESS", "0.0.0.0:8080")
 NUM_ROUNDS = int(os.environ.get("NUM_ROUNDS", "5"))
 NUM_CLIENTS = int(os.environ.get("NUM_CLIENTS", "3"))
-METRICS_PATH = Path(__file__).resolve().parent / "results" / "metrics.json"
+METRICS_PATH = Path(
+    os.environ.get(
+        "METRICS_PATH",
+        Path(__file__).resolve().parent / "results" / "metrics.json",
+    )
+).expanduser()
+MODEL_PATH = Path(
+    os.environ.get(
+        "MODEL_PATH",
+        Path(__file__).resolve().parent / "global_model.keras",
+    )
+).expanduser()
+EDC_PUBLISH_ENABLED = os.environ.get("EDC_PUBLISH_ENABLED", "false").lower() in {
+    "1",
+    "true",
+    "yes",
+}
+EDC_ROOT = Path(__file__).resolve().parent.parent / "edc-connectors"
+EDC_SOURCE_DIR = Path(
+    os.environ.get("EDC_SOURCE_DIR", EDC_ROOT / "weights")
+).expanduser()
+EDC_TRANSFER_DIR = Path(
+    os.environ.get("EDC_TRANSFER_DIR", EDC_ROOT / "transfers")
+).expanduser()
+EDC_TRACE_DIR = Path(
+    os.environ.get("EDC_TRACE_DIR", EDC_TRANSFER_DIR / "_trace")
+).expanduser()
 
 
 # ============================================================
@@ -65,6 +93,55 @@ def weighted_average(metrics):
         key: sum(count * values[key] for count, values in metrics) / total_examples
         for key in keys
     }
+
+
+def publish_round_via_edc(server_round: int) -> None:
+    runner = EDC_ROOT / "scripts" / "run_federated_round.py"
+    summary_path = EDC_TRANSFER_DIR / f"round_{server_round:03d}_summary.json"
+    trace_path = EDC_TRACE_DIR / f"round_{server_round:03d}"
+    command = [
+        sys.executable,
+        str(runner),
+        "--round",
+        str(server_round),
+        "--provider-management-template",
+        os.environ.get(
+            "EDC_PROVIDER_MANAGEMENT_TEMPLATE",
+            "http://edc-provider-{factory}:8181/management/v3",
+        ),
+        "--counter-party-address-template",
+        os.environ.get(
+            "EDC_COUNTER_PARTY_ADDRESS_TEMPLATE",
+            "http://edc-provider-{factory}:8184/protocol/2025-1",
+        ),
+        "--consumer-management",
+        os.environ.get(
+            "EDC_CONSUMER_MANAGEMENT",
+            "http://edc-consumer:8281/management/v3",
+        ),
+        "--source-dir",
+        str(EDC_SOURCE_DIR),
+        "--source-base-url",
+        os.environ.get("EDC_SOURCE_BASE_URL", "http://weights:8000"),
+        "--no-source-server",
+        "--output-dir",
+        str(EDC_TRANSFER_DIR),
+        "--trace-dir",
+        str(trace_path),
+        "--summary-path",
+        str(summary_path),
+        "--continue-on-error",
+    ]
+    result = subprocess.run(command, capture_output=True, text=True, check=False)
+    if result.stdout:
+        print(result.stdout, end="")
+    if result.stderr:
+        print(result.stderr, file=sys.stderr, end="")
+    if result.returncode:
+        raise RuntimeError(
+            f"EDC transfer failed for federated round {server_round}; "
+            f"see {summary_path}"
+        )
 
 
 # ============================================================
@@ -102,17 +179,20 @@ class SaveModelStrategy(fl.server.strategy.FedAvg):
             )
 
             # Save the latest global model
-            model_path = os.path.join(
-                os.path.dirname(__file__),
-                "global_model.keras"
-            )
-
-            global_model.save(model_path)
+            MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
+            global_model.save(MODEL_PATH)
 
             print(
                 f"[Server] Global model saved -> "
-                f"{model_path}"
+                f"{MODEL_PATH}"
             )
+
+            if EDC_PUBLISH_ENABLED:
+                print(
+                    f"[Server] Publishing factory weights through EDC "
+                    f"for round {server_round}."
+                )
+                publish_round_via_edc(server_round)
 
         return aggregated_parameters, aggregated_metrics
 

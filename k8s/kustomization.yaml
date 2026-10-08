@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: industrial-data-space
+resources:
+  - industrial-data-space.yaml
+configMapGenerator:
+  - name: mosquitto-config
+    files:
+      - mosquitto.conf=config/mosquitto.conf
+  - name: edc-provider-f1
+    files:
+      - connector.properties=config/factory-1.properties
+  - name: edc-provider-f2
+    files:
+      - connector.properties=config/factory-2.properties
+  - name: edc-provider-f3
+    files:
+      - connector.properties=config/factory-3.properties
+  - name: edc-consumer
+    files:
+      - connector.properties=config/consumer.properties

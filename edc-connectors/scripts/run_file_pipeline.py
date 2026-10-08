@@ -382,7 +382,7 @@ def run_pipeline(args: argparse.Namespace) -> None:
     source_file = args.source_dir / source_path
     output_path = args.output_dir / source_path
 
-    if not source_file.exists():
+    if not args.no_source_server and not source_file.exists():
         raise PipelineError(f"source weight file does not exist: {source_file}")
 
     server = None

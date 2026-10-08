@@ -105,7 +105,6 @@ Create the Python environment and install the pinned ML dependencies:
 py -3.12 -m venv .venv312
 .\.venv312\Scripts\python.exe -m pip install --upgrade pip
 .\.venv312\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv312\Scripts\python.exe -m pip install paho-mqtt==2.1.0
 ```
 
 Install the dashboard dependencies:
@@ -132,6 +131,138 @@ The launcher expects these generated artifacts:
 
 - `edc-runtime\transfer\transfer-03-consumer-pull\provider-proxy-data-plane\build\libs\connector.jar`
 - `edc-runtime\transfer\transfer-00-prerequisites\connector\build\libs\connector.jar`
+
+## Container deployment
+
+Docker Compose runs the dashboard, a local Mosquitto broker, the three Flower
+clients and server, the three EDC providers, and the EDC consumer. It stores
+sensor CSVs and EDC round weights in the repository and federated artifacts in
+a named Docker volume. Start Docker Desktop first, then run from the repository
+root:
+
+```powershell
+docker compose up --build -d
+docker compose ps
+```
+
+Open <http://localhost:8088/>. The API is available at
+<http://localhost:3001/> and the local MQTT broker at `localhost:1884` (the
+broker listens on port `1883` inside the Docker network).
+Flower's federated server is exposed on `localhost:8081`. Follow training with
+`docker compose logs -f federated-server federated-client-f1 federated-client-f2 federated-client-f3`.
+After each successful FedAvg aggregation, the Flower server automatically
+runs the EDC catalog, contract negotiation, and transfer flow for that round's
+three factory weight files. Round summaries and JSON protocol traces are
+written under `edc-connectors\transfers\`. If any factory transfer fails, the
+server reports the failure and stops rather than treating the round as fully
+published.
+The Compose stack uses a local anonymous Mosquitto broker for demonstration;
+do not expose it to an untrusted network.
+
+To replay a round manually from the host, use the providers' mapped
+management/DSP ports and the in-cluster weights service:
+
+```powershell
+.\.venv312\Scripts\python.exe edc-connectors\scripts\run_federated_round.py `
+  --round 1 `
+  --source-base-url http://weights:8000 `
+  --no-source-server `
+  --continue-on-error
+```
+
+To stop the services without deleting persisted data, run
+`docker compose down`. The sensor CSVs and weight files are bind-mounted from
+the repository; federated metrics and the global model are kept in the
+`federated-artifacts` volume.
+
+## Kubernetes deployment (Minikube or Kind)
+
+Build the local images from the repository root:
+
+```powershell
+docker build -t industrial-python:local .
+docker build -t industrial-dashboard-api:local .\dashboard\backend
+docker build -t industrial-dashboard-frontend:local .\dashboard\frontend
+docker build -f .\edc-connectors\Dockerfile `
+  --build-arg CONNECTOR_MODULE=transfer/transfer-03-consumer-pull/provider-proxy-data-plane `
+  -t industrial-edc-provider:local .
+docker build -f .\edc-connectors\Dockerfile `
+  --build-arg CONNECTOR_MODULE=transfer/transfer-00-prerequisites/connector `
+  -t industrial-edc-consumer:local .
+```
+
+For Kind, load those five images into the cluster (replace `kind` with the
+cluster name if different):
+
+```powershell
+kind load docker-image industrial-python:local --name kind
+kind load docker-image industrial-dashboard-api:local --name kind
+kind load docker-image industrial-dashboard-frontend:local --name kind
+kind load docker-image industrial-edc-provider:local --name kind
+kind load docker-image industrial-edc-consumer:local --name kind
+```
+
+For Minikube, use `minikube image load <image>` for each of the same image
+names. Apply the namespace, PVCs, services, deployments, jobs, and generated
+EDC/Mosquitto ConfigMaps with:
+
+```powershell
+kubectl apply -k .\k8s
+kubectl get pods,jobs,pvc -n industrial-data-space
+```
+
+The data-init Job creates the three CSV datasets in the `project-data` PVC.
+Each Flower client mounts only its own factory CSV subdirectory read-only;
+federated model/metrics and exported weights are stored in the
+`federated-artifacts` PVC. The Flower server and clients run as finite Jobs.
+The dashboard is exposed on NodePort `30080`; for Kind or a browser on the
+local machine, use:
+
+```powershell
+kubectl port-forward -n industrial-data-space service/dashboard-frontend 8088:80
+```
+
+Then open <http://localhost:8088/>. Check the data generation and training
+results with:
+
+```powershell
+kubectl logs -n industrial-data-space job/data-init
+kubectl logs -n industrial-data-space job/federated-client-f1
+kubectl logs -n industrial-data-space job/federated-client-f2
+kubectl logs -n industrial-data-space job/federated-client-f3
+```
+
+After each successful FedAvg aggregation, the Flower server Job automatically
+publishes, negotiates, and transfers all three round-weight files through the
+EDC services. Summaries and protocol traces are persisted at
+`/artifacts/transfers` on the `federated-artifacts` PVC.
+
+To run the EDC transfer scripts from the host, forward the consumer management
+API and each provider's management/DSP ports in separate terminals:
+
+```powershell
+kubectl port-forward -n industrial-data-space service/edc-consumer 29193:8281
+kubectl port-forward -n industrial-data-space service/edc-provider-1 19193:8181 19194:8184
+kubectl port-forward -n industrial-data-space service/edc-provider-2 21193:8181 21194:8184
+kubectl port-forward -n industrial-data-space service/edc-provider-3 23193:8181 23194:8184
+```
+
+After training has exported the requested round weights, the provider can fetch
+them from the in-cluster `weights` service:
+
+```powershell
+.\.venv312\Scripts\python.exe edc-connectors\scripts\run_federated_round.py `
+  --round 1 `
+  --source-base-url http://weights:8000 `
+  --no-source-server `
+  --continue-on-error
+```
+
+Kubernetes uses the cluster's default StorageClass. Minikube and Kind are
+single-node demo targets here; use dedicated storage, credentials, TLS,
+network policies, and authenticated MQTT before any multi-node or production
+deployment. The broker configuration in this prototype allows anonymous
+connections and is intended only for the cluster's internal network.
 
 ## Quick start: complete local stack
 
@@ -357,6 +488,11 @@ Other useful environment variables:
 | `SERVER_ADDRESS` | `127.0.0.1:8080` for clients/server defaults | Flower client/server |
 | `NUM_ROUNDS` | `5` | Flower server |
 | `NUM_CLIENTS` | `3` | Flower server |
+| `EDC_PUBLISH_ENABLED` | `false` | Flower server; enable EDC transfer processing after each FedAvg round |
+| `EDC_SOURCE_DIR` | `edc-connectors/weights` | Flower server; exported client weights |
+| `EDC_SOURCE_BASE_URL` | `http://weights:8000` when EDC publishing is enabled | EDC provider's weight-file source |
+| `EDC_TRANSFER_DIR` | `edc-connectors/transfers` | Flower server; received files and round summaries |
+| `EDC_TRACE_DIR` | `<EDC_TRANSFER_DIR>/_trace` | Flower server; per-factory EDC protocol traces |
 | `MODEL_PATH` | `federated/global_model.keras` | live predictor |
 | `ALERT_THRESHOLD` | `0.5` | live predictor |
 | `MQTT_BROKER_URL` | `mqtt://broker.emqx.io:1883` | dashboard backend |

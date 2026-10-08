@@ -60,8 +60,23 @@ def build_parser() -> argparse.ArgumentParser:
         help="Filename template inside each factory directory.",
     )
     parser.add_argument("--source-server-port", type=int, default=8000)
+    parser.add_argument(
+        "--source-base-url",
+        default="http://localhost:8000",
+        help="Base URL providers use to fetch the weight files.",
+    )
+    parser.add_argument(
+        "--no-source-server",
+        action="store_true",
+        help="Use an already-running HTTP source server.",
+    )
     parser.add_argument("--output-dir", type=Path, default=EDC_ROOT / "transfers")
-    parser.add_argument("--trace-dir", type=Path, default=None)
+    parser.add_argument(
+        "--trace-dir",
+        type=Path,
+        default=None,
+        help="Directory for per-factory catalog, negotiation, and transfer traces.",
+    )
     parser.add_argument("--timeout", type=float, default=60.0)
     parser.add_argument("--poll-interval", type=float, default=1.5)
     parser.add_argument(
@@ -113,6 +128,8 @@ def run_factory(args: argparse.Namespace, factory: int) -> dict[str, Any]:
         args.source_file_name_template.format(factory=factory, round=args.round),
         "--source-server-port",
         str(args.source_server_port),
+        "--source-base-url",
+        args.source_base_url,
         "--output-dir",
         str(args.output_dir),
         "--timeout",
@@ -122,6 +139,8 @@ def run_factory(args: argparse.Namespace, factory: int) -> dict[str, Any]:
     ]
     if args.trace_dir is not None:
         command.extend(["--trace-dir", str(args.trace_dir / f"factory_{factory}")])
+    if args.no_source_server:
+        command.append("--no-source-server")
 
     completed = subprocess.run(command, text=True, capture_output=True, check=False)
     result: dict[str, Any] = {

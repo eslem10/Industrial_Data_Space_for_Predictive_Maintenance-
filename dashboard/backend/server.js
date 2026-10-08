@@ -14,12 +14,24 @@ const PORT = 3001;
 const MQTT_BROKER_URL = process.env.MQTT_BROKER_URL || "mqtt://broker.emqx.io:1883";
 const MQTT_TOPIC = process.env.MQTT_TOPIC || "industrial/factory/+/sensors";
 const EDC_CONNECTORS = [
-    { id: "F1", port: Number(process.env.EDC_F1_PORT || 19193) },
-    { id: "F2", port: Number(process.env.EDC_F2_PORT || 21193) },
-    { id: "F3", port: Number(process.env.EDC_F3_PORT || 23193) }
+    {
+        id: "F1",
+        host: process.env.EDC_F1_HOST || "127.0.0.1",
+        port: Number(process.env.EDC_F1_PORT || 19193)
+    },
+    {
+        id: "F2",
+        host: process.env.EDC_F2_HOST || "127.0.0.1",
+        port: Number(process.env.EDC_F2_PORT || 21193)
+    },
+    {
+        id: "F3",
+        host: process.env.EDC_F3_HOST || "127.0.0.1",
+        port: Number(process.env.EDC_F3_PORT || 23193)
+    }
 ];
 
-const DATA_DIR = path.join(__dirname, "../../data");
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, "../../data");
 
 const FIELDNAMES = [
     "timestamp",
@@ -36,9 +48,9 @@ const liveLatest = new Map();
 const liveHistory = new Map();
 const streamClients = new Set();
 
-function checkPort(port, timeoutMs = 500) {
+function checkPort(host, port, timeoutMs = 500) {
     return new Promise((resolve) => {
-        const socket = net.createConnection({ host: "127.0.0.1", port });
+        const socket = net.createConnection({ host, port });
         let settled = false;
         const finish = (available) => {
             if (settled) return;
@@ -284,9 +296,10 @@ function startMqtt() {
 
 app.get("/api/fl/metrics", (req, res) => {
     const metricsPaths = [
+        process.env.METRICS_PATH,
         path.join(__dirname, "..", "..", "federated", "results", "metrics.json"),
         path.join(__dirname, "fl_metrics.json"),
-    ];
+    ].filter(Boolean);
     const filePath = metricsPaths.find((candidate) => fs.existsSync(candidate));
 
     if (!filePath) {
@@ -348,10 +361,11 @@ app.get("/api/mqtt/status", (req, res) => {
 
 app.get("/api/edc/status", async (req, res) => {
     const connectors = await Promise.all(
-        EDC_CONNECTORS.map(async ({ id, port }) => ({
+        EDC_CONNECTORS.map(async ({ id, host, port }) => ({
             id,
+            host,
             port,
-            available: await checkPort(port)
+            available: await checkPort(host, port)
         }))
     );
 
