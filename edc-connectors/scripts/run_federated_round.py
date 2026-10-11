@@ -147,13 +147,16 @@ def run_factory(args: argparse.Namespace, factory: int) -> dict[str, Any]:
     if args.no_source_server:
         command.append("--no-source-server")
     if args.force:
-        command.append("--force")
+        command.extend(["--force", "--replace-existing"])
 
     completed = subprocess.run(command, text=True, capture_output=True, check=False)
     skipped = "already transferred; skipping existing file" in completed.stdout
+    source_file_name = args.source_file_name_template.format(factory=factory, round=args.round)
     result: dict[str, Any] = {
         "factory": factory,
         "round": args.round,
+        "source_file": str(args.source_dir / f"factory_{factory}" / source_file_name),
+        "destination_file": str(args.output_dir / f"factory_{factory}" / source_file_name),
         "provider_management": provider_management,
         "counter_party_address": counter_party_address,
         "status": "SKIPPED" if skipped else ("TRANSFERRED" if completed.returncode == 0 else "FAILED"),

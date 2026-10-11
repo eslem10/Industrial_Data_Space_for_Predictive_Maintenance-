@@ -128,3 +128,15 @@ puis démarrer les trois connecteurs providers avec
 `scripts/start_connectors.ps1`. Le lanceur `run_federated_round.py` pourra
 alors exécuter un round complet et conserver un résumé des transferts réussis
 ou échoués.
+## Etat actuel apres consolidation
+
+- [x] Connecteurs locaux: 3 providers + 1 consumer configures avec ports separes.
+- [x] Pipeline single-factory automatise dans `scripts/run_file_pipeline.py`.
+- [x] Pipeline multi-factory automatise dans `scripts/run_federated_round.py`.
+- [x] Integration Flower: le serveur peut publier chaque round via EDC quand `EDC_PUBLISH_ENABLED=true`.
+- [x] Docker Compose et Kubernetes declarent les providers, le consumer et le service HTTP `weights`.
+- [x] Dashboard: endpoint backend `/api/edc/status` et composant frontend alimentes par l'etat reel des ports et des fichiers transferes.
+- [x] Verification locale: `scripts/check_pipeline_readiness.py` controle les JARs, sources, transferts, resumes et ports.
+- [ ] Validation runtime a refaire apres entrainement: les anciens artefacts conserves dans le depot sont des exports JSON; le flux courant attend `round_NNN.npz`.
+- [ ] Production security: DAPS/mTLS, identites reelles, TLS, secrets, stores durables et policies ODRL non triviales restent hors scope du demonstrateur local.
+

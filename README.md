@@ -388,7 +388,19 @@ edc-connectors/transfers/factory_3/round_001.npz
 By default, new rounds transfer `round_NNN.npz`. Existing JSON debug exports can
 still be transferred by passing
 `--source-file-name-template "round_{round:03d}.json"`. Existing transferred
-files are skipped unless `--force` is supplied.
+files are skipped unless `--force` is supplied. When `--force` is used, the
+runner also recreates existing provider asset and contract-definition records so
+the catalog cannot point at stale metadata from an older demo run.
+
+To check whether the local EDC artifacts for a round are present:
+
+```powershell
+.\.venv312\Scripts\python.exe edc-connectors\scripts\check_pipeline_readiness.py `
+  --round 1
+```
+
+Add `--check-connectors` after starting the connectors to verify the provider
+and consumer management ports as well.
 
 The command exits with a non-zero status if any selected factory fails. Use
 `--factory 1 --factory 3` to run a subset.

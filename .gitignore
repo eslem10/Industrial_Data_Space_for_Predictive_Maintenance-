@@ -13,6 +13,7 @@ edc-connectors/traces/
 edc-connectors/transfers/
 edc-connectors/edc-runtime/**/bin/
 edc-connectors/weights/*/round_*.json
+edc-connectors/weights/*/round_*.npz
 
 # Node
 node_modules/

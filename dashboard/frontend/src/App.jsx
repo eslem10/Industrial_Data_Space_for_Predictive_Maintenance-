@@ -19,6 +19,7 @@ function App() {
   const [lastSyncTime, setLastSyncTime] = useState(new Date().toLocaleTimeString());
   const [simulatedAnomaly, setSimulatedAnomaly] = useState(false);
   const [mqttStatus, setMqttStatus] = useState({ connected: false, lastMessageAt: null });
+  const [edcStatus, setEdcStatus] = useState({ available: 0, total: 3 });
 
   // Fetch factories
   const fetchFactories = async () => {
@@ -93,6 +94,17 @@ function App() {
     }
   };
 
+  const fetchEDCStatus = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/edc/status`);
+      const data = await response.json();
+      setEdcStatus(data);
+    } catch (error) {
+      console.error("Error fetching EDC status:", error);
+      setEdcStatus({ available: 0, total: 3 });
+    }
+  };
+
   // Refresh all
   const refreshAll = async () => {
     setIsRefreshing(true);
@@ -101,7 +113,8 @@ function App() {
       fetchHistory(selectedFactory),
       fetchFLMetrics(),
       fetchMqttStatus(),
-      fetchAlerts()
+      fetchAlerts(),
+      fetchEDCStatus()
     ]);
     setCountdown(refreshIntervalSec);
     setTimeout(() => setIsRefreshing(false), 500);
@@ -290,13 +303,15 @@ function App() {
 
         <div className="kpi-glass-card">
           <div className="kpi-card-header">
-            <span className="kpi-card-title">EDC Sovereign Nodes</span>
+            <span className="kpi-card-title">EDC Connectors</span>
             <span className="kpi-card-icon">🔗</span>
           </div>
           <div className="kpi-card-body">
-            <strong className="kpi-big-val highlight-emerald">3/3 Valid</strong>
-            <span className="kpi-badge-edc">ODRL 2.0 Contracted</span>
-            <span className="kpi-footer-text">Mutual TLS & DAPS Protected</span>
+            <strong className="kpi-big-val highlight-emerald">
+              {edcStatus.available}/{edcStatus.total || 3}
+            </strong>
+            <span className="kpi-badge-edc">{edcStatus.transferType || "HttpData-PULL"}</span>
+            <span className="kpi-footer-text">{edcStatus.identity || "Local demo identity"}</span>
           </div>
         </div>
       </section>
@@ -550,7 +565,7 @@ function App() {
             <span>• Eclipse Dataspace Connector (EDC) & Flower Federated AI</span>
           </div>
           <div className="footer-right">
-            <span>ODRL 2.0 Sovereign Policy Enforcement Enabled</span>
+            <span>EDC local demo: catalog, negotiation, EDR, transfer</span>
             <span className="footer-clock">System Time: {new Date().toLocaleDateString()}</span>
           </div>
         </div>

@@ -1,7 +1,8 @@
 param(
     [int]$StartRound = 1,
     [int]$EndRound = 5,
-    [string]$ConsumerManagement = "http://localhost:59193/management/v3"
+    [string]$ConsumerManagement = "http://localhost:29193/management/v3",
+    [string]$SourceFileNameTemplate = "round_{round:03d}.npz"
 )
 
 $ErrorActionPreference = "Stop"
@@ -10,7 +11,7 @@ $WeightsDir = Join-Path $Root "weights"
 $TraceDir = Join-Path $Root "traces"
 
 for ($round = $StartRound; $round -le $EndRound; $round++) {
-    $roundFile = "round_{0:D3}.json" -f $round
+    $roundFile = $SourceFileNameTemplate.Replace("{round:03d}", ("{0:D3}" -f $round))
     Write-Output "=== Round $round ==="
 
     $missing = @()
@@ -31,6 +32,7 @@ for ($round = $StartRound; $round -le $EndRound; $round++) {
     python "$Root\scripts\run_federated_round.py" `
         --round $round `
         --consumer-management $ConsumerManagement `
+        --source-file-name-template $SourceFileNameTemplate `
         --trace-dir $TraceDir `
         --continue-on-error `
         --summary-path $summaryPath

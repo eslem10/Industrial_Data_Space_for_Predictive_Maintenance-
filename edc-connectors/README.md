@@ -39,6 +39,18 @@ python .\edc-connectors\scripts\run_file_pipeline.py `
 The trace directory stores the catalog, negotiation, transfer, and EDR payloads
 for demos and debugging.
 
+Before a demo, validate the expected files and built connector JARs:
+
+```powershell
+python .\edc-connectors\scripts\check_pipeline_readiness.py --round 1
+```
+
+After the connectors are running, add `--check-connectors` to also probe the
+three provider management ports and the consumer management port. New transfers
+use `round_NNN.npz` by default; pass
+`--source-file-name-template "round_{round:03d}.json"` only when intentionally
+replaying older JSON debug exports.
+
 ## Démarrer les connecteurs multi-usines
 
 Le provider doit utiliser le JAR data-plane PULL situé dans
@@ -77,7 +89,8 @@ repeated `--factory` options to run a subset, for example
 `--factory 1 --factory 3`. A non-zero exit code means at least one transfer
 failed; the JSON summary preserves each subprocess output for diagnosis.
 Already transferred files are skipped by default; pass `--force` to replay a
-round and overwrite the received artifact.
+round, overwrite the received artifact, and recreate provider asset/contract
+metadata for that round.
 
 ## Connector Ports
 

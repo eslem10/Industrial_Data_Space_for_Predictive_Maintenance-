@@ -174,6 +174,41 @@ function getLatestTransfer(factoryId) {
     return files[0] || null;
 }
 
+function getLatestRoundSummary() {
+    if (!fs.existsSync(EDC_TRANSFER_DIR)) {
+        return null;
+    }
+
+    const summaries = fs.readdirSync(EDC_TRANSFER_DIR)
+        .filter((name) => /^round_\d+_summary\.json$/.test(name))
+        .map((name) => {
+            const fullPath = path.join(EDC_TRANSFER_DIR, name);
+            const stats = fs.statSync(fullPath);
+            const roundMatch = name.match(/^round_(\d+)_summary\.json$/);
+            return {
+                file: name,
+                round: roundMatch ? Number(roundMatch[1]) : null,
+                updatedAt: stats.mtime.toISOString()
+            };
+        })
+        .sort((left, right) => {
+            const roundDelta = (right.round || 0) - (left.round || 0);
+            return roundDelta || new Date(right.updatedAt) - new Date(left.updatedAt);
+        });
+
+    if (summaries.length === 0) {
+        return null;
+    }
+
+    const latest = summaries[0];
+    try {
+        const parsed = JSON.parse(fs.readFileSync(path.join(EDC_TRANSFER_DIR, latest.file), "utf8"));
+        return { ...latest, completed: parsed.completed, skipped: parsed.skipped, failed: parsed.failed };
+    } catch (err) {
+        return latest;
+    }
+}
+
 function writeSensorData(data) {
     const factoryNumber = getFactoryNumber(data.factory_id);
     const factoryDir = path.join(DATA_DIR, `factory_${factoryNumber}`);
@@ -433,7 +468,14 @@ app.get("/api/edc/status", async (req, res) => {
     res.json({
         available: connectors.filter((connector) => connector.available).length,
         total: connectors.length,
+        mode: "local-demo",
+        identity: "EDC mock IAM",
+        protocol: "dataspace-protocol-http:2025-1",
+        transferType: "HttpData-PULL",
+        policyMode: "ODRL placeholder policy",
+        productionReady: false,
         transferDir: EDC_TRANSFER_DIR,
+        latestRoundSummary: getLatestRoundSummary(),
         connectors
     });
 });
