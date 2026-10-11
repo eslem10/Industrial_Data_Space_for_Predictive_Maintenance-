@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const PORT = 3001;
+const PORT = Number(process.env.PORT || 3001);
 const MQTT_BROKER_URL = process.env.MQTT_BROKER_URL || "mqtt://broker.emqx.io:1883";
 const MQTT_TOPIC = process.env.MQTT_TOPIC || "industrial/factory/+/sensors";
 const EDC_CONNECTORS = [
@@ -32,6 +32,8 @@ const EDC_CONNECTORS = [
 ];
 
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, "../../data");
+const ALERTS_PATH = process.env.ALERTS_PATH || path.join(DATA_DIR, "alerts.json");
+const EDC_TRANSFER_DIR = process.env.EDC_TRANSFER_DIR || path.join(__dirname, "../../edc-connectors/transfers");
 
 const FIELDNAMES = [
     "timestamp",
@@ -124,10 +126,59 @@ function getCsvPath(factoryNumber) {
     return path.join(DATA_DIR, `factory_${factoryNumber}`, "sensor_data.csv");
 }
 
+function readJsonFile(filePath, fallback) {
+    try {
+        if (!fs.existsSync(filePath)) {
+            return fallback;
+        }
+
+        const content = fs.readFileSync(filePath, "utf8").trim();
+        return content ? JSON.parse(content) : fallback;
+    } catch (err) {
+        console.error(`Error reading JSON from ${filePath}:`, err);
+        return fallback;
+    }
+}
+
+function getAlerts() {
+    const alerts = readJsonFile(ALERTS_PATH, []);
+    return Array.isArray(alerts) ? alerts : [];
+}
+
+function getLatestTransfer(factoryId) {
+    const factoryNumber = getFactoryNumber(factoryId);
+    const factoryDir = path.join(EDC_TRANSFER_DIR, `factory_${factoryNumber}`);
+
+    if (!fs.existsSync(factoryDir)) {
+        return null;
+    }
+
+    const files = fs.readdirSync(factoryDir)
+        .filter((name) => /^round_\d+\.(json|npz)$/.test(name))
+        .map((name) => {
+            const fullPath = path.join(factoryDir, name);
+            const stats = fs.statSync(fullPath);
+            const roundMatch = name.match(/^round_(\d+)/);
+            return {
+                file: name,
+                round: roundMatch ? Number(roundMatch[1]) : null,
+                bytes: stats.size,
+                transferredAt: stats.mtime.toISOString()
+            };
+        })
+        .sort((left, right) => {
+            const roundDelta = (right.round || 0) - (left.round || 0);
+            return roundDelta || new Date(right.transferredAt) - new Date(left.transferredAt);
+        });
+
+    return files[0] || null;
+}
+
 function writeSensorData(data) {
     const factoryNumber = getFactoryNumber(data.factory_id);
     const factoryDir = path.join(DATA_DIR, `factory_${factoryNumber}`);
     const filePath = path.join(factoryDir, "sensor_data.csv");
+    const latestPath = path.join(factoryDir, "latest.json");
 
     fs.mkdirSync(factoryDir, { recursive: true });
 
@@ -139,6 +190,7 @@ function writeSensorData(data) {
     }
 
     fs.appendFileSync(filePath, `${row}\n`, "utf8");
+    fs.writeFileSync(latestPath, JSON.stringify(data, null, 2), "utf8");
 }
 
 function sendStreamEvent(response, event, payload) {
@@ -319,6 +371,13 @@ app.get("/api/fl/metrics", (req, res) => {
     }
 });
 
+app.get("/api/alerts", (req, res) => {
+    res.json({
+        source: ALERTS_PATH,
+        alerts: getAlerts()
+    });
+});
+
 app.get("/api/factories", (req, res) => {
     res.json(getAllFactories());
 });
@@ -365,13 +424,16 @@ app.get("/api/edc/status", async (req, res) => {
             id,
             host,
             port,
-            available: await checkPort(host, port)
+            managementUrl: `http://${host}:${port}/management/v3`,
+            available: await checkPort(host, port),
+            latestTransfer: getLatestTransfer(id)
         }))
     );
 
     res.json({
         available: connectors.filter((connector) => connector.available).length,
         total: connectors.length,
+        transferDir: EDC_TRANSFER_DIR,
         connectors
     });
 });

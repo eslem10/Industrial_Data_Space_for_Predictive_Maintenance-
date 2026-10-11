@@ -3,6 +3,7 @@
 import json
 import os
 import sys
+import time
 from pathlib import Path
 
 import numpy as np
@@ -19,6 +20,7 @@ if not DATA_DIR.is_absolute():
     DATA_DIR = PROJECT_ROOT / DATA_DIR
 MODEL_PATH = Path(os.environ.get("MODEL_PATH", PROJECT_ROOT / "federated" / "global_model.keras")).expanduser()
 ALERT_THRESHOLD = float(os.environ.get("ALERT_THRESHOLD", "0.5"))
+ALERT_INTERVAL = float(os.environ.get("ALERT_INTERVAL", "0"))
 MODEL = None
 
 
@@ -38,7 +40,7 @@ def predict(measurement):
     return float(MODEL.predict(scale_features(values), verbose=0).reshape(-1)[0])
 
 
-def main():
+def scan_once():
     alerts_path = DATA_DIR / "alerts.json"
     alerts = []
     for number in range(1, 4):
@@ -54,6 +56,20 @@ def main():
                 "probability": probability,
             })
     alerts_path.write_text(json.dumps(alerts[-50:], indent=2), encoding="utf-8")
+    print(f"Wrote {len(alerts[-50:])} alerts to {alerts_path}")
+
+
+def main():
+    if ALERT_INTERVAL <= 0:
+        scan_once()
+        return
+
+    while True:
+        try:
+            scan_once()
+        except Exception as error:
+            print(f"live predictor scan failed: {error}", file=sys.stderr)
+        time.sleep(ALERT_INTERVAL)
 
 
 if __name__ == "__main__":

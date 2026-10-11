@@ -359,6 +359,11 @@ def configure_args() -> argparse.Namespace:
     parser.add_argument("--source-server-port", type=int, default=8000)
     parser.add_argument("--no-source-server", action="store_true", help="Do not start a local HTTP file server.")
     parser.add_argument("--output-dir", type=Path, default=EDC_ROOT / "transfers")
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Transfer again even if the output file for this factory round already exists.",
+    )
     parser.add_argument("--policy-id", default="aPolicy")
     parser.add_argument("--asset-id", default=None)
     parser.add_argument("--contract-definition-id", default=None)
@@ -381,6 +386,10 @@ def run_pipeline(args: argparse.Namespace) -> None:
     source_path = f"{factory_slug(args.factory)}/{args.source_file_name}"
     source_file = args.source_dir / source_path
     output_path = args.output_dir / source_path
+
+    if output_path.exists() and not args.force:
+        log(f"already transferred; skipping existing file {output_path}")
+        return
 
     if not args.no_source_server and not source_file.exists():
         raise PipelineError(f"source weight file does not exist: {source_file}")

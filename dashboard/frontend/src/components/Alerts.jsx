@@ -1,10 +1,28 @@
 import { useState } from "react";
 
-function Alerts({ factories = [] }) {
+function Alerts({ factories = [], modelAlerts = [] }) {
     const [filter, setFilter] = useState("all"); // "all", "critical", "warning"
     const [acknowledged, setAcknowledged] = useState({});
 
     const alerts = [];
+
+    modelAlerts.forEach((alert, index) => {
+        const probability = Number(alert.probability);
+        const severity = probability >= 0.8 ? "critical" : "warning";
+        const factoryId = alert.factory_id || "Unknown";
+        alerts.push({
+            id: `model-${factoryId}-${alert.timestamp || index}`,
+            factoryId,
+            factoryName: `Factory ${String(factoryId).replace("F", "")}`,
+            type: severity,
+            title: severity === "critical" ? "MODEL FAILURE RISK" : "Model Risk Warning",
+            message: `Federated model predicted elevated failure probability for ${factoryId}.`,
+            metric: Number.isFinite(probability)
+                ? `Failure probability: ${(probability * 100).toFixed(1)}%`
+                : "Failure probability unavailable",
+            timestamp: alert.timestamp || "Latest model scan"
+        });
+    });
 
     factories.forEach((factory) => {
         if (factory.status === "offline") {

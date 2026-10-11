@@ -73,6 +73,16 @@ function EDCStatus({ apiBaseUrl }) {
     const isAvailable = (factoryId) =>
         edcStatus?.connectors?.find((connector) => connector.id === factoryId)?.available === true;
 
+    const statusFor = (factoryId) =>
+        edcStatus?.connectors?.find((connector) => connector.id === factoryId);
+
+    const formatBytes = (bytes) => {
+        if (!Number.isFinite(bytes)) return "No transfer";
+        if (bytes < 1024) return `${bytes} B`;
+        if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+        return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    };
+
     return (
         <section className="dashboard-section">
             <div className="section-head-wrap">
@@ -99,12 +109,17 @@ function EDCStatus({ apiBaseUrl }) {
             </div>
 
             <div className="edc-cards-grid">
-                {connectors.map((c) => (
-                    <div
-                        className={`edc-glass-card ${selectedConnector === c.id ? "card-expanded" : ""}`}
-                        key={c.id}
-                        onClick={() => setSelectedConnector(selectedConnector === c.id ? null : c.id)}
-                    >
+                {connectors.map((c) => {
+                    const live = statusFor(c.factoryId);
+                    const latestTransfer = live?.latestTransfer;
+                    const endpoint = live?.managementUrl || c.endpoint;
+
+                    return (
+                        <div
+                            className={`edc-glass-card ${selectedConnector === c.id ? "card-expanded" : ""}`}
+                            key={c.id}
+                            onClick={() => setSelectedConnector(selectedConnector === c.id ? null : c.id)}
+                        >
                         <div className="edc-card-top">
                             <div className="edc-avatar">
                                 <span>EDC</span>
@@ -127,12 +142,14 @@ function EDCStatus({ apiBaseUrl }) {
                                 <strong className="stat-value">{c.daps}</strong>
                             </div>
                             <div className="edc-stat-box">
-                                <span className="stat-name">Latency</span>
-                                <strong className="stat-value highlight-cyan">{c.latency}</strong>
+                                <span className="stat-name">Latest Round</span>
+                                <strong className="stat-value highlight-cyan">
+                                    {latestTransfer ? `#${latestTransfer.round}` : "None"}
+                                </strong>
                             </div>
                             <div className="edc-stat-box">
-                                <span className="stat-name">Rate</span>
-                                <strong className="stat-value">{c.throughput}</strong>
+                                <span className="stat-name">Received</span>
+                                <strong className="stat-value">{formatBytes(latestTransfer?.bytes)}</strong>
                             </div>
                         </div>
 
@@ -148,7 +165,11 @@ function EDCStatus({ apiBaseUrl }) {
                                 </div>
                                 <div className="detail-line">
                                     <span>Endpoint:</span>
-                                    <code className="endpoint-code">{c.endpoint}</code>
+                                    <code className="endpoint-code">{endpoint}</code>
+                                </div>
+                                <div className="detail-line">
+                                    <span>Latest file:</span>
+                                    <code>{latestTransfer?.file || "No transferred file found"}</code>
                                 </div>
                             </div>
                         )}
@@ -159,7 +180,8 @@ function EDCStatus({ apiBaseUrl }) {
                             </span>
                         </div>
                     </div>
-                ))}
+                    );
+                })}
             </div>
         </section>
     );

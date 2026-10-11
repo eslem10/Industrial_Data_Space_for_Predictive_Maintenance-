@@ -118,6 +118,26 @@ services:
         condition: service_started
     restart: "no"
 
+  live-predictor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "simulator/live_predictor.py"]
+    environment:
+      DATA_DIR: /app/data
+      MODEL_PATH: /artifacts/global_model.keras
+      ALERT_INTERVAL: "15"
+      ALERT_THRESHOLD: ${ALERT_THRESHOLD:-0.5}
+    volumes:
+      - ./data:/app/data
+      - federated-artifacts:/artifacts:ro
+    depends_on:
+      data-init:
+        condition: service_completed_successfully
+      federated-server:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
   mqtt-simulator:
     build:
       context: .
@@ -139,7 +159,9 @@ services:
     environment:
       PORT: "3001"
       DATA_DIR: /app/data
+      ALERTS_PATH: /app/data/alerts.json
       METRICS_PATH: /artifacts/metrics.json
+      EDC_TRANSFER_DIR: /transfers
       MQTT_BROKER_URL: mqtt://mosquitto:1883
       MQTT_TOPIC: industrial/factory/+/sensors
       EDC_F1_HOST: edc-provider-1
@@ -153,6 +175,7 @@ services:
     volumes:
       - ./data:/app/data
       - federated-artifacts:/artifacts:ro
+      - ./edc-connectors/transfers:/transfers:ro
     depends_on:
       mosquitto:
         condition: service_healthy

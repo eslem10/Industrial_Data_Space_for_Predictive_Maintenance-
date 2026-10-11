@@ -11,6 +11,7 @@ function App() {
   const [selectedFactory, setSelectedFactory] = useState("F1");
   const [history, setHistory] = useState([]);
   const [flMetrics, setFlMetrics] = useState([]);
+  const [modelAlerts, setModelAlerts] = useState([]);
   const [activeTab, setActiveTab] = useState("overview"); // "overview", "factories", "ai", "edc", "alerts"
   const [refreshIntervalSec, setRefreshIntervalSec] = useState(15);
   const [countdown, setCountdown] = useState(15);
@@ -81,6 +82,17 @@ function App() {
     }
   };
 
+  const fetchAlerts = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/alerts`);
+      const data = await response.json();
+      setModelAlerts(Array.isArray(data.alerts) ? data.alerts : []);
+    } catch (error) {
+      console.error("Error fetching model alerts:", error);
+      setModelAlerts([]);
+    }
+  };
+
   // Refresh all
   const refreshAll = async () => {
     setIsRefreshing(true);
@@ -88,7 +100,8 @@ function App() {
       fetchFactories(),
       fetchHistory(selectedFactory),
       fetchFLMetrics(),
-      fetchMqttStatus()
+      fetchMqttStatus(),
+      fetchAlerts()
     ]);
     setCountdown(refreshIntervalSec);
     setTimeout(() => setIsRefreshing(false), 500);
@@ -519,7 +532,7 @@ function App() {
 
         {/* VIEW: OVERVIEW OR ALERTS */}
         {(activeTab === "overview" || activeTab === "alerts") && (
-          <Alerts factories={activeFactories} />
+          <Alerts factories={activeFactories} modelAlerts={modelAlerts} />
         )}
 
         {/* VIEW: OVERVIEW OR EDC */}

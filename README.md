@@ -152,7 +152,7 @@ Flower's federated server is exposed on `localhost:8081`. Follow training with
 `docker compose logs -f federated-server federated-client-f1 federated-client-f2 federated-client-f3`.
 After each successful FedAvg aggregation, the Flower server automatically
 runs the EDC catalog, contract negotiation, and transfer flow for that round's
-three factory weight files. Round summaries and JSON protocol traces are
+three factory `.npz` weight files. Round summaries and JSON protocol traces are
 written under `edc-connectors\transfers\`. If any factory transfer fails, the
 server reports the failure and stops rather than treating the round as fully
 published.
@@ -350,7 +350,8 @@ The server requires all three clients by default. After each successful
 training round:
 
 - the client exports
-  `edc-connectors\weights\factory_N\round_NNN.json`;
+  `edc-connectors\weights\factory_N\round_NNN.npz` for EDC transfer and a
+  JSON debug copy at `round_NNN.json`;
 - the server updates `federated\global_model.keras`;
 - aggregated metrics are appended to `federated\results\metrics.json`.
 
@@ -379,10 +380,15 @@ The runner invokes the single-factory pipeline for factories 1, 2, and 3.
 Successful transfers are written to:
 
 ```text
-edc-connectors/transfers/factory_1/round_001.json
-edc-connectors/transfers/factory_2/round_001.json
-edc-connectors/transfers/factory_3/round_001.json
+edc-connectors/transfers/factory_1/round_001.npz
+edc-connectors/transfers/factory_2/round_001.npz
+edc-connectors/transfers/factory_3/round_001.npz
 ```
+
+By default, new rounds transfer `round_NNN.npz`. Existing JSON debug exports can
+still be transferred by passing
+`--source-file-name-template "round_{round:03d}.json"`. Existing transferred
+files are skipped unless `--force` is supplied.
 
 The command exits with a non-zero status if any selected factory fails. Use
 `--factory 1 --factory 3` to run a subset.
@@ -480,6 +486,13 @@ $env:ALERT_THRESHOLD = "0.6"
 .\.venv312\Scripts\python.exe simulator\live_predictor.py
 ```
 
+For continuous dashboard updates, run it as a loop:
+
+```powershell
+$env:ALERT_INTERVAL = "15"
+.\.venv312\Scripts\python.exe simulator\live_predictor.py
+```
+
 Other useful environment variables:
 
 | Variable | Default | Used by |
@@ -491,10 +504,12 @@ Other useful environment variables:
 | `EDC_PUBLISH_ENABLED` | `false` | Flower server; enable EDC transfer processing after each FedAvg round |
 | `EDC_SOURCE_DIR` | `edc-connectors/weights` | Flower server; exported client weights |
 | `EDC_SOURCE_BASE_URL` | `http://weights:8000` when EDC publishing is enabled | EDC provider's weight-file source |
+| `EDC_SOURCE_FILE_TEMPLATE` | `round_{round:03d}.npz` | Flower server; per-factory weight filename transferred through EDC |
 | `EDC_TRANSFER_DIR` | `edc-connectors/transfers` | Flower server; received files and round summaries |
 | `EDC_TRACE_DIR` | `<EDC_TRANSFER_DIR>/_trace` | Flower server; per-factory EDC protocol traces |
 | `MODEL_PATH` | `federated/global_model.keras` | live predictor |
 | `ALERT_THRESHOLD` | `0.5` | live predictor |
+| `ALERT_INTERVAL` | `0` | live predictor; `0` runs once, positive values run continuously |
 | `MQTT_BROKER_URL` | `mqtt://broker.emqx.io:1883` | dashboard backend |
 | `MQTT_TOPIC` | `industrial/factory/+/sensors` | dashboard backend |
 | `VITE_API_BASE_URL` | `http://localhost:3001` | frontend |
@@ -511,8 +526,9 @@ Other useful environment variables:
 | `GET /api/factories/:id/latest` | Latest measurement for a factory |
 | `GET /api/factories/:id/history?limit=30` | Recent measurements |
 | `GET /api/fl/metrics` | Flower round metrics |
+| `GET /api/alerts` | Model-generated alert records from `data/alerts.json` |
 | `GET /api/mqtt/status` | MQTT connection status |
-| `GET /api/edc/status` | Availability of provider management ports |
+| `GET /api/edc/status` | Provider availability plus latest transferred EDC artifact per factory |
 | `GET /api/stream` | Server-sent events for live dashboard updates |
 
 ## Troubleshooting
@@ -551,7 +567,7 @@ Check:
 1. the provider and consumer processes in `edc-connectors\runtime-logs\`;
 2. the provider management/DSP ports in the table above;
 3. that the expected source file exists under
-   `edc-connectors\weights\factory_N\round_NNN.json`;
+   `edc-connectors\weights\factory_N\round_NNN.npz` or the JSON debug copy;
 4. the JSON traces under `edc-connectors\transfers\_trace\`;
 5. the generated round summary when using `--summary-path`.
 

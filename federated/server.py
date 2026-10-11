@@ -123,6 +123,8 @@ def publish_round_via_edc(server_round: int) -> None:
         str(EDC_SOURCE_DIR),
         "--source-base-url",
         os.environ.get("EDC_SOURCE_BASE_URL", "http://weights:8000"),
+        "--source-file-name-template",
+        os.environ.get("EDC_SOURCE_FILE_TEMPLATE", "round_{round:03d}.npz"),
         "--no-source-server",
         "--output-dir",
         str(EDC_TRANSFER_DIR),

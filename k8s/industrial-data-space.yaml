@@ -126,6 +126,48 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: live-predictor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: live-predictor
+  template:
+    metadata:
+      labels:
+        app: live-predictor
+    spec:
+      containers:
+        - name: live-predictor
+          image: industrial-python:local
+          imagePullPolicy: IfNotPresent
+          command: ["python", "simulator/live_predictor.py"]
+          env:
+            - name: DATA_DIR
+              value: /app/data
+            - name: MODEL_PATH
+              value: /artifacts/global_model.keras
+            - name: ALERT_INTERVAL
+              value: "15"
+            - name: ALERT_THRESHOLD
+              value: "0.5"
+          volumeMounts:
+            - name: project-data
+              mountPath: /app/data
+            - name: federated-artifacts
+              mountPath: /artifacts
+              readOnly: true
+      volumes:
+        - name: project-data
+          persistentVolumeClaim:
+            claimName: project-data
+        - name: federated-artifacts
+          persistentVolumeClaim:
+            claimName: federated-artifacts
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
   name: dashboard-api
 spec:
   replicas: 1
@@ -147,8 +189,12 @@ spec:
           env:
             - name: DATA_DIR
               value: /app/data
+            - name: ALERTS_PATH
+              value: /app/data/alerts.json
             - name: METRICS_PATH
               value: /artifacts/metrics.json
+            - name: EDC_TRANSFER_DIR
+              value: /artifacts/transfers
             - name: MQTT_BROKER_URL
               value: mqtt://mosquitto:1883
             - name: MQTT_TOPIC

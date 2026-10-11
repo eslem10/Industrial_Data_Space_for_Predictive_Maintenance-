@@ -93,14 +93,24 @@ def load_factory_data(factory_name: str):
 def export_round_weights(factory_name: str, round_number: int, weights) -> None:
     output_dir = EDC_WEIGHTS_DIR / factory_name
     output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / f"round_{round_number:03d}.json"
+    json_path = output_dir / f"round_{round_number:03d}.json"
+    npz_path = output_dir / f"round_{round_number:03d}.npz"
     payload = {
         "factory_id": factory_name,
         "round": round_number,
         "weights": [layer.tolist() for layer in weights],
     }
-    output_path.write_text(json.dumps(payload), encoding="utf-8")
-    print(f"[{factory_name}] exported round {round_number} weights to {output_path}")
+    json_path.write_text(json.dumps(payload), encoding="utf-8")
+    np.savez_compressed(
+        npz_path,
+        factory_id=np.asarray(factory_name),
+        round=np.asarray(round_number, dtype=np.int32),
+        **{f"layer_{index}": layer for index, layer in enumerate(weights)},
+    )
+    print(
+        f"[{factory_name}] exported round {round_number} weights to "
+        f"{npz_path} and {json_path}"
+    )
 
 
 class FactoryClient(fl.client.NumPyClient):

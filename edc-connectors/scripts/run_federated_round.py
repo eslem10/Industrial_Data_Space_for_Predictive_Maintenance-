@@ -56,7 +56,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--source-dir", type=Path, default=EDC_ROOT / "weights")
     parser.add_argument(
         "--source-file-name-template",
-        default="round_{round:03d}.json",
+        default="round_{round:03d}.npz",
         help="Filename template inside each factory directory.",
     )
     parser.add_argument("--source-server-port", type=int, default=8000)
@@ -89,6 +89,11 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=None,
         help="Write the round summary as JSON.",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Transfer files again even when outputs already exist.",
     )
     return parser
 
@@ -141,14 +146,17 @@ def run_factory(args: argparse.Namespace, factory: int) -> dict[str, Any]:
         command.extend(["--trace-dir", str(args.trace_dir / f"factory_{factory}")])
     if args.no_source_server:
         command.append("--no-source-server")
+    if args.force:
+        command.append("--force")
 
     completed = subprocess.run(command, text=True, capture_output=True, check=False)
+    skipped = "already transferred; skipping existing file" in completed.stdout
     result: dict[str, Any] = {
         "factory": factory,
         "round": args.round,
         "provider_management": provider_management,
         "counter_party_address": counter_party_address,
-        "status": "TRANSFERRED" if completed.returncode == 0 else "FAILED",
+        "status": "SKIPPED" if skipped else ("TRANSFERRED" if completed.returncode == 0 else "FAILED"),
         "returncode": completed.returncode,
     }
     if completed.stdout:
@@ -185,6 +193,7 @@ def main() -> int:
         "round": args.round,
         "factories": factories,
         "completed": sum(result["status"] == "TRANSFERRED" for result in results),
+        "skipped": sum(result["status"] == "SKIPPED" for result in results),
         "failed": sum(result["status"] == "FAILED" for result in results),
         "results": results,
     }
