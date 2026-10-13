@@ -17,3 +17,10 @@ edc-connectors/weights/*/round_*.npz
 
 # Node
 node_modules/
+#predictor 
+runtime-logs/live-predictor.err.log
+runtime-logs/live-predictor.out.log
+#start 
+start_all.ps1
+stop_all.ps1
+ dashboard/frontend/.env
