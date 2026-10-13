@@ -1,6 +1,7 @@
 param(
     [string]$Root = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path,
-    [switch]$SkipConsumer
+    [switch]$SkipConsumer,
+    [switch]$Wait
 )
 
 $ErrorActionPreference = "Stop"
@@ -20,6 +21,8 @@ if (-not $SkipConsumer -and -not (Test-Path -LiteralPath $consumerJar)) {
 
 New-Item -ItemType Directory -Force -Path $logDirectory | Out-Null
 
+$procs = @()
+
 function Start-Connector {
     param(
         [string]$Name,
@@ -35,7 +38,8 @@ function Start-Connector {
         -RedirectStandardOutput $stdout `
         -RedirectStandardError $stderr `
         -PassThru
-    Write-Output "$Name started with PID $($process.Id)"
+    Write-Host "$Name started with PID $($process.Id)" -ForegroundColor Green
+    return $process
 }
 
 Start-Connector -Name "factory-1" `
@@ -55,3 +59,10 @@ if (-not $SkipConsumer) {
 Start-Connector -Name "federation-server" `
     -Jar $consumerJar `
     -Config $federationServerConfig
+
+if ($Wait) {
+    Write-Host "EDC connectors running. Monitoring..." -ForegroundColor Cyan
+    while ($true) {
+        Start-Sleep -Seconds 5
+    }
+}

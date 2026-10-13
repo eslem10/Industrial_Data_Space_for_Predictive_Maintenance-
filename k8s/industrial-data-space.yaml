@@ -293,6 +293,9 @@ metadata:
 spec:
   backoffLimit: 0
   template:
+    metadata:
+      labels:
+        app: federated-server
     spec:
       restartPolicy: Never
       containers:
@@ -351,10 +354,10 @@ metadata:
   labels:
     app.kubernetes.io/part-of: industrial-data-space
 spec:
-  backoffLimit: 0
+  backoffLimit: 2
   template:
     spec:
-      restartPolicy: Never
+      restartPolicy: OnFailure
       initContainers:
         - name: wait-for-data
           image: industrial-python:local
@@ -364,6 +367,10 @@ spec:
             - name: project-data
               mountPath: /app/data/factory_1
               subPath: factory_1
+        - name: wait-for-server
+          image: eclipse-mosquitto:2
+          imagePullPolicy: IfNotPresent
+          command: ["sh", "-c", "until nc -z federated-server 8080; do echo 'Waiting for federated-server:8080...'; sleep 3; done; echo 'Server ready!'"]
       containers:
         - name: flower-client
           image: industrial-python:local
@@ -398,10 +405,10 @@ metadata:
   labels:
     app.kubernetes.io/part-of: industrial-data-space
 spec:
-  backoffLimit: 0
+  backoffLimit: 2
   template:
     spec:
-      restartPolicy: Never
+      restartPolicy: OnFailure
       initContainers:
         - name: wait-for-data
           image: industrial-python:local
@@ -411,6 +418,10 @@ spec:
             - name: project-data
               mountPath: /app/data/factory_2
               subPath: factory_2
+        - name: wait-for-server
+          image: eclipse-mosquitto:2
+          imagePullPolicy: IfNotPresent
+          command: ["sh", "-c", "until nc -z federated-server 8080; do echo 'Waiting for federated-server:8080...'; sleep 3; done; echo 'Server ready!'"]
       containers:
         - name: flower-client
           image: industrial-python:local
@@ -445,10 +456,10 @@ metadata:
   labels:
     app.kubernetes.io/part-of: industrial-data-space
 spec:
-  backoffLimit: 0
+  backoffLimit: 2
   template:
     spec:
-      restartPolicy: Never
+      restartPolicy: OnFailure
       initContainers:
         - name: wait-for-data
           image: industrial-python:local
@@ -458,6 +469,10 @@ spec:
             - name: project-data
               mountPath: /app/data/factory_3
               subPath: factory_3
+        - name: wait-for-server
+          image: eclipse-mosquitto:2
+          imagePullPolicy: IfNotPresent
+          command: ["sh", "-c", "until nc -z federated-server 8080; do echo 'Waiting for federated-server:8080...'; sleep 3; done; echo 'Server ready!'"]
       containers:
         - name: flower-client
           image: industrial-python:local

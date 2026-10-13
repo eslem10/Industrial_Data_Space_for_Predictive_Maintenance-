@@ -191,7 +191,7 @@ services:
     build:
       context: dashboard/frontend
       args:
-        VITE_API_BASE_URL: /api
+        VITE_API_BASE_URL: ""
     ports:
       - "8088:80"
     depends_on:

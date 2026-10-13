@@ -12,6 +12,7 @@ import threading
 import time
 import urllib.error
 import urllib.request
+from urllib.parse import quote
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
@@ -42,7 +43,7 @@ def factory_slug(factory: int) -> str:
 
 
 def round_file_name(round_number: int) -> str:
-    return f"round_{round_number:03d}.json"
+    return f"round_{round_number:03d}.npz"
 
 
 def json_context() -> dict[str, str]:
@@ -107,6 +108,28 @@ def request_json(
     if isinstance(parsed, dict):
         return parsed
     return {"status": status, "value": parsed}
+
+
+def create_or_reuse_resource(
+    collection_url: str,
+    resource_id: str,
+    payload: dict[str, Any],
+    label: str,
+    replace_existing: bool = False,
+) -> dict[str, Any]:
+    try:
+        return request_json("POST", collection_url, payload)
+    except PipelineError as exc:
+        if "HTTP 409" not in str(exc):
+            raise
+        if not replace_existing:
+            log(f"{label} already exists: {resource_id}")
+            return {"status": 409, "id": resource_id}
+
+        delete_url = f"{collection_url.rstrip('/')}/{quote(resource_id, safe='')}"
+        log(f"replacing existing {label}: {resource_id}")
+        request("DELETE", delete_url)
+        return request_json("POST", collection_url, payload)
 
 
 def write_trace(trace_dir: Path | None, name: str, payload: dict[str, Any]) -> None:
@@ -348,7 +371,7 @@ def configure_args() -> argparse.Namespace:
     parser.add_argument(
         "--source-file-name",
         default=None,
-        help="Filename inside the factory directory. Defaults to round_NNN.json.",
+        help="Filename inside the factory directory. Defaults to round_NNN.npz.",
     )
     parser.add_argument(
         "--content-type",
@@ -363,6 +386,11 @@ def configure_args() -> argparse.Namespace:
         "--force",
         action="store_true",
         help="Transfer again even if the output file for this factory round already exists.",
+    )
+    parser.add_argument(
+        "--replace-existing",
+        action="store_true",
+        help="Delete and recreate existing provider policy, asset, and contract definition on 409 conflicts.",
     )
     parser.add_argument("--policy-id", default="aPolicy")
     parser.add_argument("--asset-id", default=None)
@@ -400,27 +428,30 @@ def run_pipeline(args: argparse.Namespace) -> None:
 
     try:
         log("creating provider policy")
-        request_json(
-            "POST",
+        create_or_reuse_resource(
             f"{args.provider_management}/policydefinitions",
+            args.policy_id,
             build_policy_payload(args.policy_id),
-            allow_conflict=True,
+            "provider policy",
+            False,
         )
 
         log("creating provider asset")
-        request_json(
-            "POST",
+        create_or_reuse_resource(
             f"{args.provider_management}/assets",
+            args.asset_id,
             build_asset_payload(args, source_path),
-            allow_conflict=True,
+            "provider asset",
+            args.replace_existing,
         )
 
         log("creating provider contract definition")
-        request_json(
-            "POST",
+        create_or_reuse_resource(
             f"{args.provider_management}/contractdefinitions",
+            args.contract_definition_id,
             build_contract_definition_payload(args),
-            allow_conflict=True,
+            "provider contract definition",
+            args.replace_existing,
         )
 
         log("requesting consumer catalog")

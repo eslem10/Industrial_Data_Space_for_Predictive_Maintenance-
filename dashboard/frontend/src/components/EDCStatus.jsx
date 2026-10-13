@@ -99,7 +99,7 @@ function EDCStatus({ apiBaseUrl }) {
                 {connectors.map((connector) => {
                     const live = statusFor(connector.factoryId);
                     const latestTransfer = live?.latestTransfer;
-                    const endpoint = live?.managementUrl || connector.endpoint;
+                    const endpoint = connector.endpoint || live?.managementUrl;
 
                     return (
                         <div

@@ -1,1 +1,10 @@
-{"timestamp": "2026-01-09T07:59:00", "factory_id": "F2", "temperature": 74.644, "vibration": 1.466, "pressure": 5.244, "humidity": 69.949, "energy_consumption": 10.153, "state": "failure"}
+{
+  "timestamp": "2026-10-13T20:11:19+00:00",
+  "factory_id": "F2",
+  "temperature": 73.351,
+  "vibration": 0,
+  "pressure": 2.747,
+  "humidity": 67.538,
+  "energy_consumption": 7.489,
+  "state": "normal"
+}
